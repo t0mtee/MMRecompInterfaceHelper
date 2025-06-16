@@ -10,6 +10,8 @@ typedef enum {
     /* 3 */ PICTO_BOX_STATE_PHOTO
 } PictoBoxState;
 
+#pragma region Interface_DrawItemButtons_Declares
+
 extern TexturePtr gTatlCUpENGTex[];
 extern TexturePtr gTatlCUpGERTex[];
 extern TexturePtr gTatlCUpFRATex[];
@@ -24,47 +26,47 @@ extern Gfx* Gfx_DrawTexRectIA8_DropShadow(Gfx* gfx, TexturePtr texture, s16 text
 extern Gfx* Gfx_DrawRect_DropShadow(Gfx* gfx, s16 rectLeft, s16 rectTop, s16 rectWidth, s16 rectHeight, u16 dsdx, u16 dtdy,
                              s16 r, s16 g, s16 b, s16 a);
 
-bool mButtonsEnabled[5] = {
+bool mButtonsEnabled[4] = {
     true,                               // EQUIP_SLOT_B
     true,                               // EQUIP_SLOT_C_LEFT
     true,                               // EQUIP_SLOT_C_DOWN
-    true,                               // EQUIP_SLOT_C_RIGHT
-    true                                // EQUIP_SLOT_A
+    true                                // EQUIP_SLOT_C_RIGHT
 };
-s16 mButtonPositionsX[5] = {
+TexturePtr mButtonTextures[4] = {
+    gButtonBackgroundTex,               // EQUIP_SLOT_B
+    gButtonBackgroundTex,               // EQUIP_SLOT_C_LEFT
+    gButtonBackgroundTex,               // EQUIP_SLOT_C_DOWN
+    gButtonBackgroundTex                // EQUIP_SLOT_C_RIGHT
+};
+s16 mButtonPositionsX[4] = {
     167,                                // EQUIP_SLOT_B
     227,                                // EQUIP_SLOT_C_LEFT
     249,                                // EQUIP_SLOT_C_DOWN
-    271,                                // EQUIP_SLOT_C_RIGHT
-    00                                  // EQUIP_SLOT_A
+    271                                 // EQUIP_SLOT_C_RIGHT
 };
-s16 mButtonPositionsY[5] = {
+s16 mButtonPositionsY[4] = {
     17,                                 // EQUIP_SLOT_B
     18,                                 // EQUIP_SLOT_C_LEFT
     34,                                 // EQUIP_SLOT_C_DOWN
-    18,                                 // EQUIP_SLOT_C_RIGHT
-    00                                  // EQUIP_SLOT_A
+    18                                  // EQUIP_SLOT_C_RIGHT
 };
-s16 mButtonScalesX[5] = {
+s16 mButtonScalesX[4] = {
     (s32)(1.1230469f * (1 << 10)) >> 1, // EQUIP_SLOT_B
     (s32)(1.2109375f * (1 << 10)) >> 1, // EQUIP_SLOT_C_LEFT
     (s32)(1.2109375f * (1 << 10)) >> 1, // EQUIP_SLOT_C_DOWN
-    (s32)(1.2109375f * (1 << 10)) >> 1, // EQUIP_SLOT_C_RIGHT
-    00                                  // EQUIP_SLOT_A
+    (s32)(1.2109375f * (1 << 10)) >> 1  // EQUIP_SLOT_C_RIGHT
 };
-s16 mButtonScalesY[5] = {
+s16 mButtonScalesY[4] = {
     (s32)(1.1230469f * (1 << 10)) >> 1, // EQUIP_SLOT_B
     (s32)(1.2109375f * (1 << 10)) >> 1, // EQUIP_SLOT_C_LEFT
     (s32)(1.2109375f * (1 << 10)) >> 1, // EQUIP_SLOT_C_DOWN
-    (s32)(1.2109375f * (1 << 10)) >> 1, // EQUIP_SLOT_C_RIGHT
-    00                                  // EQUIP_SLOT_A
+    (s32)(1.2109375f * (1 << 10)) >> 1  // EQUIP_SLOT_C_RIGHT
 };
-s16 mButtonColours[5][3] = {
+s16 mButtonColours[4][3] = {
     {100, 255, 120},                    // EQUIP_SLOT_B
     {255, 240, 0},                      // EQUIP_SLOT_C_LEFT
     {255, 240, 0},                      // EQUIP_SLOT_C_DOWN
-    {255, 240, 0},                      // EQUIP_SLOT_C_RIGHT
-    {100, 200, 255}                     // EQUIP_SLOT_A
+    {255, 240, 0}                       // EQUIP_SLOT_C_RIGHT
 };
 
 bool mStartForceEnabled = false;
@@ -132,14 +134,16 @@ s16 mCGlyphsColours[3][3] = {
 
 RECOMP_DECLARE_EVENT(b_button_hook_init(PlayState* play))
 RECOMP_DECLARE_EVENT(b_button_hook_return(PlayState* play))
-RECOMP_DECLARE_EVENT(c_button_hook_init(PlayState* play, EquipSlot button))
-RECOMP_DECLARE_EVENT(c_button_hook_return(PlayState* play, EquipSlot button))
+RECOMP_DECLARE_EVENT(button_hook_init(PlayState* play, EquipSlot button))
+RECOMP_DECLARE_EVENT(button_hook_return(PlayState* play, EquipSlot button))
 RECOMP_DECLARE_EVENT(start_hook_init(PlayState* play))
 RECOMP_DECLARE_EVENT(start_hook_return(PlayState* play))
 RECOMP_DECLARE_EVENT(c_up_hook_init(PlayState* play, s16* alpha))
 RECOMP_DECLARE_EVENT(c_up_hook_return(PlayState* play, s16* alpha))
 RECOMP_DECLARE_EVENT(c_glyph_hook_init(PlayState* play, s16* alpha))
 RECOMP_DECLARE_EVENT(c_glyph_hook_return(PlayState* play, s16* alpha))
+
+#pragma endregion
 
 RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
     static TexturePtr sCUpLabelTextures[LANGUAGE_MAX] = {
@@ -158,33 +162,19 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
     gDPPipeSync(OVERLAY_DISP++);
     gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
 
-    // B Button Color & Texture
-    if (mButtonsEnabled[EQUIP_SLOT_B]) {
-        b_button_hook_init(play);
-
-        OVERLAY_DISP = Gfx_DrawTexRectIA8_DropShadow(
-            OVERLAY_DISP, gButtonBackgroundTex, 32, 32,
-            mButtonPositionsX[EQUIP_SLOT_B], mButtonPositionsY[EQUIP_SLOT_B], 29, 29,
-            mButtonScalesX[EQUIP_SLOT_B] * 2, mButtonScalesY[EQUIP_SLOT_B] * 2,
-            mButtonColours[EQUIP_SLOT_B][0], mButtonColours[EQUIP_SLOT_B][1], mButtonColours[EQUIP_SLOT_B][2],
-            interfaceCtx->bAlpha);
-        gDPPipeSync(OVERLAY_DISP++);
-
-        b_button_hook_return(play);
-    }
-
-    // C-Left, C-Down, C-Right Button Color & Texture
-    for (temp = EQUIP_SLOT_C_LEFT; temp <= EQUIP_SLOT_C_RIGHT; temp++) {
+    // B, C-Left, C-Down, C-Right Button Color & Texture
+    for (temp = EQUIP_SLOT_B; temp <= EQUIP_SLOT_C_RIGHT; temp++) {
         if (mButtonsEnabled[temp]) {
-            c_button_hook_init(play, temp);
+            button_hook_init(play, temp);
 
-            OVERLAY_DISP = Gfx_DrawRect_DropShadow(
-                OVERLAY_DISP, mButtonPositionsX[temp], mButtonPositionsY[temp],
+            OVERLAY_DISP = Gfx_DrawTexRectIA8_DropShadow(
+                OVERLAY_DISP, mButtonTextures[temp], 32, 32,
+                mButtonPositionsX[temp], mButtonPositionsY[temp],
                 27, 27, mButtonScalesX[temp] * 2, mButtonScalesY[temp] * 2,
                 mButtonColours[temp][0], mButtonColours[temp][1], mButtonColours[temp][2],
                 interfaceCtx->cLeftAlpha);
 
-            c_button_hook_return(play, temp);
+            button_hook_return(play, temp);
         }
     }
 
@@ -300,6 +290,8 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
     CLOSE_DISPS(play->state.gfxCtx);
 }
 
+#pragma region Interface_DrawAmmoCount_Declares
+
 extern TexturePtr gAmmoDigit0Tex[];
 
 s16 mAmmoPositionsX[4] = {
@@ -323,6 +315,8 @@ u16 mAmmoLowerScaleY = 1 << 10;
 
 RECOMP_DECLARE_EVENT(ammo_hook_init(PlayState* play, u8 item, u16* ammo))
 RECOMP_DECLARE_EVENT(ammo_hook_return(PlayState* play, u8 item))
+
+#pragma endregion
 
 RECOMP_PATCH void Interface_DrawAmmoCount(PlayState* play, s16 button, s16 alpha) {
     u8 i;
@@ -404,6 +398,8 @@ RECOMP_PATCH void Interface_DrawAmmoCount(PlayState* play, s16 button, s16 alpha
     CLOSE_DISPS(play->state.gfxCtx);
 }
 
+#pragma region Interface_DrawBButtonIcons_Declares
+
 extern s16 sBButtonDoActionTextureScale;
 extern f32 sBButtonDoActionTextureScales[];
 extern s16 sBButtonDoActionXPositions[];
@@ -417,6 +413,8 @@ bool mBButtonForceEnable[9] = {false, false, false, false, false, false, false, 
 int mBButtonDoActionColour[3] = {255, 255, 255};
 
 RECOMP_DECLARE_EVENT(b_button_deku_init(PlayState* play))
+
+#pragma endregion
 
 RECOMP_PATCH void Interface_DrawBButtonIcons(PlayState* play) {
     mBButtonDrawn = false;
