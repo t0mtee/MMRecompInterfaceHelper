@@ -10,8 +10,6 @@ typedef enum {
     /* 3 */ PICTO_BOX_STATE_PHOTO
 } PictoBoxState;
 
-#pragma region Interface_DrawItemButtons_Declares
-
 extern TexturePtr gTatlCUpENGTex[];
 extern TexturePtr gTatlCUpGERTex[];
 extern TexturePtr gTatlCUpFRATex[];
@@ -230,14 +228,15 @@ s16 mCGlyphColours[3][3] = {
 };
 RECOMP_DECLARE_EVENT(c_glyph_hook_return(PlayState* play, s16* alpha))
 
-#pragma endregion
-
 RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
     InterfaceContext* interfaceCtx = &play->interfaceCtx;
     PauseContext* pauseCtx = &play->pauseCtx;
     s16 temp; // Used as both an alpha value and a button index
     
     OPEN_DISPS(play->state.gfxCtx);
+    
+    // Recomp doesn't seem to like this here or earlier? But when this printf isn't here or is later, the patch seems to not be applied. What's going on?
+    recomp_printf("test\n");
 
     gDPPipeSync(OVERLAY_DISP++);
     gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
@@ -248,7 +247,7 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
     for (temp = EQUIP_SLOT_B; temp <= EQUIP_SLOT_C_RIGHT; temp++) {
         if (mButtonsEnabled[temp]) {
             button_hook_init(play, temp);
-
+            
             OVERLAY_DISP = Gfx_DrawTexRectIA8_DropShadow(
                 OVERLAY_DISP, mButtonTextures[temp], mButtonTexturesWidth[temp], mButtonTexturesHeight[temp],
                 mButtonPositionsX[temp], mButtonPositionsY[temp],
@@ -263,7 +262,7 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
 
     if (mStartForceEnabled || (!IS_PAUSE_STATE_GAMEOVER(pauseCtx) && (IS_PAUSED(pauseCtx)))) {
         // Start Button
-
+        
         start_button_hook_init(play);
         
         if (mStartButtonEnabled) {
@@ -282,7 +281,7 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
         // Start Label
 
         start_label_hook_init(play);
-
+        
         if (mStartLabelEnabled) {
             gDPPipeSync(OVERLAY_DISP++);
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0,
@@ -326,7 +325,7 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
             }
 
             c_up_button_hook_init(play, &temp);
-
+            
             if (mCUpButtonEnabled) {
                 OVERLAY_DISP = Gfx_DrawTexRectIA8_DropShadow(
                     OVERLAY_DISP, mCUpButtonTexture, mCUpButtonTextureWidth, mCUpButtonTextureHeight,
@@ -351,7 +350,7 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
                     mCUpLabelPositionX + mCUpLabelRectSizeX, mCUpLabelPositionY  + mCUpLabelRectSizeY, G_TX_RENDERTILE,
                     0, 0, mCUpLabelScaleX, mCUpLabelScaleY);
             }
-
+            
             c_up_button_hook_return(play, &temp);
         }
 
@@ -376,7 +375,7 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
             } else { // EQUIP_SLOT_C_RIGHT
                 alpha = interfaceCtx->cRightAlpha;
             }
-
+            
             c_glyph_hook_init(play, &alpha);
             
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0,
@@ -392,319 +391,114 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
             c_glyph_hook_return(play, &alpha);
         }
     }
-
+    
     CLOSE_DISPS(play->state.gfxCtx);
 }
 
-#pragma region Interface_DrawAmmoCount_Declares
+// #pragma region Init_Defines
 
-extern TexturePtr gAmmoDigit0Tex[];
+// #define INIT_PARAMETERS bool (*dButtonsEnabled)[4], TexturePtr (*dButtonTextures)[], s16 (*dButtonTexturesWidth)[4], s16 (*dButtonTexturesHeight)[4], s16 (*dButtonPositionsX)[4], s16 (*dButtonPositionsY)[4], s16 (*dButtonRectSizesX)[4], s16 (*dButtonRectSizesY)[4], s16 (*dButtonScalesX)[4], s16 (*dButtonScalesY)[4], s16 (*dButtonColours)[4][3], bool* dStartForceEnabled, bool* dStartButtonEnabled, TexturePtr* dStartButtonTexture, s16* dStartButtonTextureWidth, s16* dStartButtonTextureHeight, s16* dStartButtonPositionX, s16* dStartButtonPositionY, s16* dStartButtonRectSizeX, s16* dStartButtonRectSizeY, u16* dStartButtonScaleX, u16* dStartButtonScaleY, s16 (*dStartButtonColour)[3], bool* dStartLabelEnabled, int (*dStartLabelPrimColour)[3], int (*dStartLabelEnvColour)[4], TexturePtr* dStartLabelTexture, int* dStartLabelTextureWidth, int* dStartLabelTextureHeight, int* dStartLabelPositionX, int* dStartLabelPositionY, int* dStartLabelRectSizeX, int* dStartLabelRectSizeY, int* dStartLabelScaleX, int* dStartLabelScaleY, bool* dCUpButtonForceEnabled, bool* dCUpButtonEnabled, TexturePtr* dCUpButtonTexture, int* dCUpButtonTextureWidth, int* dCUpButtonTextureHeight, s16* dCUpButtonPositionX, s16* dCUpButtonPositionY, s16* dCUpButtonRectSizeX, s16* dCUpButtonRectSizeY, u16* dCUpButtonScaleX, u16* dCUpButtonScaleY, s16 (*dCUpButtonColours)[3], bool* dCUpLabelEnabled, int (*dCUpLabelPrimColour)[3], int (*dCUpLabelEnvColour)[4], TexturePtr (*dCUpLabelTextures)[LANGUAGE_MAX], int (*dCUpLabelTextureWidths)[LANGUAGE_MAX], int (*dCUpLabelTextureHeights)[LANGUAGE_MAX], int* dCUpLabelPositionX, int* dCUpLabelPositionY, int* dCUpLabelRectSizeX, int* dCUpLabelRectSizeY, int* dCUpLabelScaleX, int* dCUpLabelScaleY, bool (*dCGlyphsEnabled)[3], TexturePtr (*dCGlyphTextures)[3], s16 (*dCGlyphTextureWidths)[3], s16 (*dCGlyphTextureHeights)[3], s16 (*dCGlyphPositionsX)[3], s16 (*dCGlyphPositionsY)[3], s16 (*dCGlyphRectSizesX)[3], s16 (*dCGlyphRectSizesY)[3], s16 (*dCGlyphScalesX)[3], s16 (*dCGlyphScalesY)[3], s16 (*dCGlyphColours)[3][3], int (*dAmmoPrimColour)[3], int (*dAmmoEnvColour)[4], bool* dAmmoForceMaxColour, int (*dAmmoFullColour)[3], int (*dAmmoEmptyColour)[3], TexturePtr* dAmmoTextureTens, s16* dAmmoTextureWidthTens, s16* dAmmoTextureHeightTens, s16 (*dAmmoPositionsTensX)[4], s16 (*dAmmoPositionsTensY)[4], s16 (*dAmmoRectSizeTensX)[4], s16 (*dAmmoRectSizeTensY)[4], u16* dAmmoUpperScaleTensX, u16* dAmmoUpperScaleTensY, u16* dAmmoLowerScaleTensX, u16* dAmmoLowerScaleTensY, TexturePtr* dAmmoTextureOnes, s16* dAmmoTextureWidthOnes, s16* dAmmoTextureHeightOnes, s16 (*dAmmoPositionsOnesX)[4], s16 (*dAmmoPositionsOnesY)[4], s16 (*dAmmoRectSizeOnesX)[4], s16 (*dAmmoRectSizeOnesY)[4], u16* dAmmoUpperScaleOnesX, u16* dAmmoUpperScaleOnesY, u16* dAmmoLowerScaleOnesX, u16* dAmmoLowerScaleOnesY, bool* dBButtonDrawn, bool (*dBButtonEnabled)[8]
 
-RECOMP_DECLARE_EVENT(ammo_hook_init(PlayState* play, u8 item, u16* ammo))
-int mAmmoPrimColour[3] = {255, 255, 255};
-int mAmmoEnvColour[4] = {0, 0, 0, 255};
-bool mAmmoForceMaxColour = false;
-int mAmmoFullColour[3] = {120, 255, 0};
-int mAmmoEmptyColour[3] = {100, 100, 100};
+// #pragma endregion
 
-TexturePtr mAmmoTextureTens = NULL;
-s16 mAmmoTextureWidthTens = 8;
-s16 mAmmoTextureHeightTens = 8;
-s16 mAmmoPositionsTensX[4] = {
-    162,                                // EQUIP_SLOT_B
-    228,                                // EQUIP_SLOT_C_LEFT
-    250,                                // EQUIP_SLOT_C_DOWN
-    272                                 // EQUIP_SLOT_C_RIGHT
-};
-s16 mAmmoPositionsTensY[4] = {
-    35,                                 // EQUIP_SLOT_B
-    35,                                 // EQUIP_SLOT_C_LEFT
-    51,                                 // EQUIP_SLOT_C_DOWN
-    35                                  // EQUIP_SLOT_C_RIGHT
-};
-s16 mAmmoRectSizeTensX[4] = {
-    8,                                  // EQUIP_SLOT_B
-    8,                                  // EQUIP_SLOT_C_LEFT
-    8,                                  // EQUIP_SLOT_C_DOWN
-    8                                   // EQUIP_SLOT_C_RIGHT
-};
-s16 mAmmoRectSizeTensY[4] = {
-    8,                                  // EQUIP_SLOT_B
-    8,                                  // EQUIP_SLOT_C_LEFT
-    8,                                  // EQUIP_SLOT_C_DOWN
-    8                                   // EQUIP_SLOT_C_RIGHT
-};
-u16 mAmmoUpperScaleTensX = 1 << 10;
-u16 mAmmoUpperScaleTensY = 1 << 10;
-u16 mAmmoLowerScaleTensX = 1 << 10;
-u16 mAmmoLowerScaleTensY = 1 << 10;
-
-TexturePtr mAmmoTextureOnes = NULL;
-s16 mAmmoTextureWidthOnes = 8;
-s16 mAmmoTextureHeightOnes = 8;
-s16 mAmmoPositionsOnesX[4] = {
-    168,                                // EQUIP_SLOT_B
-    234,                                // EQUIP_SLOT_C_LEFT
-    256,                                // EQUIP_SLOT_C_DOWN
-    278                                 // EQUIP_SLOT_C_RIGHT
-};
-s16 mAmmoPositionsOnesY[4] = {
-    35,                                 // EQUIP_SLOT_B
-    35,                                 // EQUIP_SLOT_C_LEFT
-    51,                                 // EQUIP_SLOT_C_DOWN
-    35                                  // EQUIP_SLOT_C_RIGHT
-};
-s16 mAmmoRectSizeOnesX[4] = {
-    8,                                  // EQUIP_SLOT_B
-    8,                                  // EQUIP_SLOT_C_LEFT
-    8,                                  // EQUIP_SLOT_C_DOWN
-    8                                   // EQUIP_SLOT_C_RIGHT
-};
-s16 mAmmoRectSizeOnesY[4] = {
-    8,                                  // EQUIP_SLOT_B
-    8,                                  // EQUIP_SLOT_C_LEFT
-    8,                                  // EQUIP_SLOT_C_DOWN
-    8                                   // EQUIP_SLOT_C_RIGHT
-};
-u16 mAmmoUpperScaleOnesX = 1 << 10;
-u16 mAmmoUpperScaleOnesY = 1 << 10;
-u16 mAmmoLowerScaleOnesX = 1 << 10;
-u16 mAmmoLowerScaleOnesY = 1 << 10;
-RECOMP_DECLARE_EVENT(ammo_hook_return(PlayState* play, u8 item))
-
-#pragma endregion
-
-RECOMP_PATCH void Interface_DrawAmmoCount(PlayState* play, s16 button, s16 alpha) {
-    u8 i;
-    u16 ammo;
-
-    OPEN_DISPS(play->state.gfxCtx);
-
-    i = ((void)0, GET_CUR_FORM_BTN_ITEM(button));
-
-    if ((i == ITEM_DEKU_STICK) || (i == ITEM_DEKU_NUT) || (i == ITEM_BOMB) || (i == ITEM_BOW) ||
-        ((i >= ITEM_BOW_FIRE) && (i <= ITEM_BOW_LIGHT)) || (i == ITEM_BOMBCHU) || (i == ITEM_POWDER_KEG) ||
-        (i == ITEM_MAGIC_BEANS) || (i == ITEM_PICTOGRAPH_BOX)) {
-
-        if ((i >= ITEM_BOW_FIRE) && (i <= ITEM_BOW_LIGHT)) {
-            i = ITEM_BOW;
-        }
-
-        ammo = AMMO(i);
-
-        if (i == ITEM_PICTOGRAPH_BOX) {
-            if (!CHECK_QUEST_ITEM(QUEST_PICTOGRAPH)) {
-                ammo = 0;
-            } else {
-                ammo = 1;
-            }
-        }
-
-        gDPPipeSync(OVERLAY_DISP++);
-        //! @bug Missing a gDPSetEnvColor here, which means the ammo count will be drawn with the last env color set.
-        //! Once you have the magic meter, this becomes a non issue, as the magic meter will set the color to black,
-        //! but prior to that, when certain conditions are met, the color will have last been set by the wallet icon
-        //! causing the ammo count to be drawn incorrectly. This is most obvious when you get deku nuts early on, and
-        //! the ammo count is drawn with a shade of green.
-        // @interface_helper Fixed in Interface_DrawItemButtons
-        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, mAmmoPrimColour[0], mAmmoPrimColour[1], mAmmoPrimColour[2], alpha);
-        gDPSetEnvColor(OVERLAY_DISP++, mAmmoEnvColour[0], mAmmoEnvColour[1], mAmmoEnvColour[2], mAmmoEnvColour[3]);
-        
-        ammo_hook_init(play, i, &ammo);
-
-        if ((button == EQUIP_SLOT_B) && (gSaveContext.minigameStatus == MINIGAME_STATUS_ACTIVE)) {
-            ammo = play->interfaceCtx.minigameAmmo;
-        } else if ((button == EQUIP_SLOT_B) && (play->bButtonAmmoPlusOne > 1)) {
-            ammo = play->bButtonAmmoPlusOne - 1;
-        } else if (mAmmoForceMaxColour ||
-                ((i == ITEM_BOW) && (AMMO(i) == CUR_CAPACITY(UPG_QUIVER))) ||
-                ((i == ITEM_BOMB) && (AMMO(i) == CUR_CAPACITY(UPG_BOMB_BAG))) ||
-                ((i == ITEM_DEKU_STICK) && (AMMO(i) == CUR_CAPACITY(UPG_DEKU_STICKS))) ||
-                ((i == ITEM_DEKU_NUT) && (AMMO(i) == CUR_CAPACITY(UPG_DEKU_NUTS))) ||
-                ((i == ITEM_BOMBCHU) && (AMMO(i) == CUR_CAPACITY(UPG_BOMB_BAG))) ||
-                ((i == ITEM_POWDER_KEG) && (ammo == 1)) || ((i == ITEM_PICTOGRAPH_BOX) && (ammo == 1)) ||
-                ((i == ITEM_MAGIC_BEANS) && (ammo == 20))) {
-            gDPSetPrimColor(OVERLAY_DISP++, 0, 0, mAmmoFullColour[0], mAmmoFullColour[1], mAmmoFullColour[2], alpha);
-        }
-        
-        if ((u32)ammo == 0) {
-            gDPSetPrimColor(OVERLAY_DISP++, 0, 0, mAmmoEmptyColour[0], mAmmoEmptyColour[1], mAmmoEmptyColour[2], alpha);
-        }
-
-        for (i = 0; ammo >= 10; i++) {
-            ammo -= 10;
-        }
-
-        // Draw upper digit (tens)
-        if ((u32)i != 0) {
-            if (mAmmoTextureTens == NULL) {
-                OVERLAY_DISP =
-                    Gfx_DrawTexRectIA8(OVERLAY_DISP, (u8*)gAmmoDigit0Tex + i * AMMO_DIGIT_TEX_SIZE,
-                        mAmmoTextureWidthTens, mAmmoTextureHeightTens,
-                        mAmmoPositionsTensX[button], mAmmoPositionsTensY[button],
-                        mAmmoRectSizeTensX[button], mAmmoRectSizeTensY[button], mAmmoUpperScaleTensX, mAmmoUpperScaleTensY);
-            } else {
-                OVERLAY_DISP =
-                    Gfx_DrawTexRectIA8(OVERLAY_DISP, mAmmoTextureTens,
-                        mAmmoTextureWidthTens, mAmmoTextureHeightTens,
-                        mAmmoPositionsTensX[button], mAmmoPositionsTensY[button],
-                        mAmmoRectSizeTensX[button], mAmmoRectSizeTensY[button], mAmmoUpperScaleTensX, mAmmoUpperScaleTensY);
-            }
-        }
-
-        // Draw lower digit (ones)
-        if (mAmmoTextureOnes == NULL) {
-            OVERLAY_DISP =
-                Gfx_DrawTexRectIA8(OVERLAY_DISP, (u8*)gAmmoDigit0Tex + ammo * AMMO_DIGIT_TEX_SIZE,
-                    mAmmoTextureWidthOnes, mAmmoTextureHeightOnes,
-                    mAmmoPositionsOnesX[button], mAmmoPositionsOnesY[button],
-                    mAmmoRectSizeOnesX[button], mAmmoRectSizeOnesY[button], mAmmoUpperScaleOnesX, mAmmoUpperScaleOnesY);
-        } else {
-            OVERLAY_DISP =
-                Gfx_DrawTexRectIA8(OVERLAY_DISP, mAmmoTextureOnes,
-                    mAmmoTextureWidthOnes, mAmmoTextureHeightOnes,
-                    mAmmoPositionsOnesX[button], mAmmoPositionsOnesY[button],
-                    mAmmoRectSizeOnesX[button], mAmmoRectSizeOnesY[button], mAmmoUpperScaleOnesX, mAmmoUpperScaleOnesY);
-        }
-
-        ammo_hook_return(play, i);
-    }
-
-    CLOSE_DISPS(play->state.gfxCtx);
-}
-
-#pragma region Interface_DrawBButtonIcons_Declares
-
-extern s16 sBButtonDoActionTextureScale;
-extern f32 sBButtonDoActionTextureScales[];
-extern s16 sBButtonDoActionXPositions[];
-extern s16 sBButtonDoActionYPositions[];
-extern void Interface_DrawItemIconTexture(PlayState* play, TexturePtr texture, s16 button);
-
-bool mBButtonDrawn = false;
-bool mBButtonEnabled[8] = {true, true, true, true, true, true, true, true};
-
-RECOMP_DECLARE_EVENT(b_button_deku_init(PlayState* play))
-RECOMP_DECLARE_EVENT(b_button_deku_return(PlayState* play))
-
-RECOMP_DECLARE_EVENT(b_button_minigame_init(PlayState* play, u8* item))
-RECOMP_DECLARE_EVENT(b_button_minigame_return(PlayState* play, u8* item))
-
-RECOMP_DECLARE_EVENT(b_button_interface_init(PlayState* play))
-RECOMP_DECLARE_EVENT(b_button_interface_return(PlayState* play))
-
-RECOMP_DECLARE_EVENT(b_button_action_init(PlayState* play))
-RECOMP_DECLARE_EVENT(b_button_action_return(PlayState* play))
-
-#pragma endregion
-
-RECOMP_PATCH void Interface_DrawBButtonIcons(PlayState* play) {
-    InterfaceContext* interfaceCtx = &play->interfaceCtx;
-    Player* player = GET_PLAYER(play);
-
-    OPEN_DISPS(play->state.gfxCtx);
-
-    gDPPipeSync(OVERLAY_DISP++);
-    gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->bAlpha);
-    gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
-
-    u8 bButtonIcon = BUTTON_ITEM_EQUIP(CUR_FORM, EQUIP_SLOT_B);
-
-    mBButtonDrawn = false;
-
-    if (mBButtonEnabled[0] && !interfaceCtx->bButtonInterfaceDoActionActive && (player->stateFlags3 & PLAYER_STATE3_1000000)) {
-        if (gSaveContext.buttonStatus[EQUIP_SLOT_B] != BTN_DISABLED) {
-            mBButtonDrawn = true;
-            
-            b_button_deku_init(play);
-
-            Interface_DrawItemIconTexture(play, interfaceCtx->iconItemSegment, EQUIP_SLOT_B);
-            gDPPipeSync(OVERLAY_DISP++);
-            gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
-                              PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
-
-            Interface_DrawAmmoCount(play, EQUIP_SLOT_B, interfaceCtx->bAlpha);
-
-            b_button_deku_return(play);
-        }
-    } else if (mBButtonEnabled[1] &&
-                ((!interfaceCtx->bButtonPlayerDoActionActive && !interfaceCtx->bButtonInterfaceDoActionActive) ||
-                ((interfaceCtx->bButtonPlayerDoActionActive && ((bButtonIcon < ITEM_SWORD_KOKIRI) ||
-                (bButtonIcon > ITEM_SWORD_GILDED)) && bButtonIcon != ITEM_NONE) &&
-                (bButtonIcon != ITEM_DEKU_NUT)))) {
-        if (mBButtonEnabled[2] && ((player->transformation == PLAYER_FORM_FIERCE_DEITY) || (player->transformation == PLAYER_FORM_HUMAN))) {
-            if (mBButtonEnabled[3] && bButtonIcon != ITEM_NONE) {
-                mBButtonDrawn = true;
-                
-                b_button_minigame_init(play, &bButtonIcon);
-
-                Interface_DrawItemIconTexture(play, interfaceCtx->iconItemSegment, EQUIP_SLOT_B);
-                if (mBButtonEnabled[4] && ((player->stateFlags1 & PLAYER_STATE1_800000) || CHECK_WEEKEVENTREG(WEEKEVENTREG_08_01) ||
-                    (play->bButtonAmmoPlusOne >= 2))) {
-                    gDPPipeSync(OVERLAY_DISP++);
-                    gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE,
-                                      0, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
-
-                    if (mBButtonEnabled[5] && (play->sceneId != SCENE_SYATEKI_MIZU) &&
-                        (play->sceneId != SCENE_SYATEKI_MORI) && (play->sceneId != SCENE_BOWLING) &&
-                        ((gSaveContext.minigameStatus != MINIGAME_STATUS_ACTIVE) ||
-                         (gSaveContext.save.entrance != ENTRANCE(ROMANI_RANCH, 0))) &&
-                        ((gSaveContext.minigameStatus != MINIGAME_STATUS_ACTIVE) || !CHECK_EVENTINF(EVENTINF_35)) &&
-                        (!CHECK_WEEKEVENTREG(WEEKEVENTREG_31_80) || (play->bButtonAmmoPlusOne != 100))) {
-                        Interface_DrawAmmoCount(play, EQUIP_SLOT_B, interfaceCtx->bAlpha);
-                    }
-                }
-                
-                b_button_minigame_return(play, &bButtonIcon);
-            }
-        }
-    } else if (mBButtonEnabled[6] && interfaceCtx->bButtonInterfaceDoActionActive) {
-        mBButtonDrawn = true;
-
-        b_button_interface_init(play);
-
-        gDPPipeSync(OVERLAY_DISP++);
-        gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
-                          PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
-        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->bAlpha);
-        gDPLoadTextureBlock_4b(OVERLAY_DISP++, interfaceCtx->doActionSegment + DO_ACTION_OFFSET_B_PLAYER, G_IM_FMT_IA,
-                               DO_ACTION_TEX_WIDTH, DO_ACTION_TEX_HEIGHT, 0, G_TX_NOMIRROR | G_TX_WRAP,
-                               G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-        
-        sBButtonDoActionTextureScale =
-            1024.0f / (sBButtonDoActionTextureScales[gSaveContext.options.language] / 100.0f);
-        
-        gSPTextureRectangle(OVERLAY_DISP++, sBButtonDoActionXPositions[gSaveContext.options.language] * 4,
-                            sBButtonDoActionYPositions[gSaveContext.options.language] * 4,
-                            (sBButtonDoActionXPositions[gSaveContext.options.language] + DO_ACTION_TEX_WIDTH) << 2,
-                            (sBButtonDoActionYPositions[gSaveContext.options.language] + DO_ACTION_TEX_HEIGHT) << 2,
-                            G_TX_RENDERTILE, 0, 0, sBButtonDoActionTextureScale, sBButtonDoActionTextureScale);
-
-        b_button_interface_return(play);
-    } else if (mBButtonEnabled[7] && interfaceCtx->bButtonPlayerDoAction != DO_ACTION_NONE) {
-        mBButtonDrawn = true;
-        
-        b_button_action_init(play);
-
-        gDPPipeSync(OVERLAY_DISP++);
-        gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
-                          PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
-        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->bAlpha);
-        gDPLoadTextureBlock_4b(OVERLAY_DISP++, interfaceCtx->doActionSegment + DO_ACTION_OFFSET_B_INTERFACE,
-                               G_IM_FMT_IA, DO_ACTION_TEX_WIDTH, DO_ACTION_TEX_HEIGHT, 0, G_TX_NOMIRROR | G_TX_WRAP,
-                               G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-
-        sBButtonDoActionTextureScale =
-            1024.0f / (sBButtonDoActionTextureScales[gSaveContext.options.language] / 100.0f);
-
-        gSPTextureRectangle(OVERLAY_DISP++, sBButtonDoActionXPositions[gSaveContext.options.language] * 4,
-                            sBButtonDoActionYPositions[gSaveContext.options.language] * 4,
-                            (sBButtonDoActionXPositions[gSaveContext.options.language] + DO_ACTION_TEX_WIDTH) << 2,
-                            (sBButtonDoActionYPositions[gSaveContext.options.language] + DO_ACTION_TEX_HEIGHT) << 2,
-                            G_TX_RENDERTILE, 0, 0, sBButtonDoActionTextureScale, sBButtonDoActionTextureScale);
-        
-        b_button_action_return(play);
-    }
-
-    CLOSE_DISPS(play->state.gfxCtx);
-}
+// RECOMP_EXPORT void InterfaceHelper_Init(INIT_PARAMETERS) {
+//     dButtonsEnabled = &mButtonsEnabled;
+//     dButtonTextures = &mButtonTextures;
+//     dButtonTexturesWidth = &mButtonTexturesWidth;
+//     dButtonTexturesHeight = &mButtonTexturesHeight;
+//     dButtonPositionsX = &mButtonPositionsX;
+//     dButtonPositionsY = &mButtonPositionsY;
+//     dButtonRectSizesX = &mButtonRectSizesX;
+//     dButtonRectSizesY = &mButtonRectSizesY;
+//     dButtonScalesX = &mButtonScalesX;
+//     dButtonScalesY = &mButtonScalesY;
+//     dButtonColours = &mButtonColours;
+//     dStartForceEnabled = &mStartForceEnabled;
+//     dStartButtonEnabled = &mStartButtonEnabled;
+//     dStartButtonTexture = &mStartButtonTexture;
+//     dStartButtonTextureWidth = &mStartButtonTextureWidth;
+//     dStartButtonTextureHeight = &mStartButtonTextureHeight;
+//     dStartButtonPositionX = &mStartButtonPositionX;
+//     dStartButtonPositionY = &mStartButtonPositionY;
+//     dStartButtonRectSizeX = &mStartButtonRectSizeX;
+//     dStartButtonRectSizeY = &mStartButtonRectSizeY;
+//     dStartButtonScaleX = &mStartButtonScaleX;
+//     dStartButtonScaleY = &mStartButtonScaleY;
+//     dStartButtonColour = &mStartButtonColour;
+//     dStartLabelEnabled = &mStartLabelEnabled;
+//     dStartLabelPrimColour = &mStartLabelPrimColour;
+//     dStartLabelEnvColour = &mStartLabelEnvColour;
+//     dStartLabelTexture = &mStartLabelTexture;
+//     dStartLabelTextureWidth = &mStartLabelTextureWidth;
+//     dStartLabelTextureHeight = &mStartLabelTextureHeight;
+//     dStartLabelPositionX = &mStartLabelPositionX;
+//     dStartLabelPositionY = &mStartLabelPositionY;
+//     dStartLabelRectSizeX = &mStartLabelRectSizeX;
+//     dStartLabelRectSizeY = &mStartLabelRectSizeY;
+//     dStartLabelScaleX = &mStartLabelScaleX;
+//     dStartLabelScaleY = &mStartLabelScaleY;
+//     dCUpButtonForceEnabled = &mCUpButtonForceEnabled;
+//     dCUpButtonEnabled = &mCUpButtonEnabled;
+//     dCUpButtonTexture = &mCUpButtonTexture;
+//     dCUpButtonTextureWidth = &mCUpButtonTextureWidth;
+//     dCUpButtonTextureHeight = &mCUpButtonTextureHeight;
+//     dCUpButtonPositionX = &mCUpButtonPositionX;
+//     dCUpButtonPositionY = &mCUpButtonPositionY;
+//     dCUpButtonRectSizeX = &mCUpButtonRectSizeX;
+//     dCUpButtonRectSizeY = &mCUpButtonRectSizeY;
+//     dCUpButtonScaleX = &mCUpButtonScaleX;
+//     dCUpButtonScaleY = &mCUpButtonScaleY;
+//     dCUpButtonColours = &mCUpButtonColours;
+//     dCUpLabelEnabled = &mCUpLabelEnabled;
+//     dCUpLabelPrimColour = &mCUpLabelPrimColour;
+//     dCUpLabelEnvColour = &mCUpLabelEnvColour;
+//     dCUpLabelTextures = &mCUpLabelTextures;
+//     dCUpLabelTextureWidths = &mCUpLabelTextureWidths;
+//     dCUpLabelTextureHeights = &mCUpLabelTextureHeights;
+//     dCUpLabelPositionX = &mCUpLabelPositionX;
+//     dCUpLabelPositionY = &mCUpLabelPositionY;
+//     dCUpLabelRectSizeX = &mCUpLabelRectSizeX;
+//     dCUpLabelRectSizeY = &mCUpLabelRectSizeY;
+//     dCUpLabelScaleX = &mCUpLabelScaleX;
+//     dCUpLabelScaleY = &mCUpLabelScaleY;
+//     dCGlyphsEnabled = &mCGlyphsEnabled;
+//     dCGlyphTextures = &mCGlyphTextures;
+//     dCGlyphTextureWidths = &mCGlyphTextureWidths;
+//     dCGlyphTextureHeights = &mCGlyphTextureHeights;
+//     dCGlyphPositionsX = &mCGlyphPositionsX;
+//     dCGlyphPositionsY = &mCGlyphPositionsY;
+//     dCGlyphRectSizesX = &mCGlyphRectSizesX;
+//     dCGlyphRectSizesY = &mCGlyphRectSizesY;
+//     dCGlyphScalesX = &mCGlyphScalesX;
+//     dCGlyphScalesY = &mCGlyphScalesY;
+//     dCGlyphColours = &mCGlyphColours;
+//     dAmmoPrimColour = &mAmmoPrimColour;
+//     dAmmoEnvColour = &mAmmoEnvColour;
+//     dAmmoForceMaxColour = &mAmmoForceMaxColour;
+//     dAmmoFullColour = &mAmmoFullColour;
+//     dAmmoEmptyColour = &mAmmoEmptyColour;
+//     dAmmoTextureTens = &mAmmoTextureTens;
+//     dAmmoTextureWidthTens = &mAmmoTextureWidthTens;
+//     dAmmoTextureHeightTens = &mAmmoTextureHeightTens;
+//     dAmmoPositionsTensX = &mAmmoPositionsTensX;
+//     dAmmoPositionsTensY = &mAmmoPositionsTensY;
+//     dAmmoRectSizeTensX = &mAmmoRectSizeTensX;
+//     dAmmoRectSizeTensY = &mAmmoRectSizeTensY;
+//     dAmmoUpperScaleTensX = &mAmmoUpperScaleTensX;
+//     dAmmoUpperScaleTensY = &mAmmoUpperScaleTensY;
+//     dAmmoLowerScaleTensX = &mAmmoLowerScaleTensX;
+//     dAmmoLowerScaleTensY = &mAmmoLowerScaleTensY;
+//     dAmmoTextureOnes = &mAmmoTextureOnes;
+//     dAmmoTextureWidthOnes = &mAmmoTextureWidthOnes;
+//     dAmmoTextureHeightOnes = &mAmmoTextureHeightOnes;
+//     dAmmoPositionsOnesX = &mAmmoPositionsOnesX;
+//     dAmmoPositionsOnesY = &mAmmoPositionsOnesY;
+//     dAmmoRectSizeOnesX = &mAmmoRectSizeOnesX;
+//     dAmmoRectSizeOnesY = &mAmmoRectSizeOnesY;
+//     dAmmoUpperScaleOnesX = &mAmmoUpperScaleOnesX;
+//     dAmmoUpperScaleOnesY = &mAmmoUpperScaleOnesY;
+//     dAmmoLowerScaleOnesX = &mAmmoLowerScaleOnesX;
+//     dAmmoLowerScaleOnesY = &mAmmoLowerScaleOnesY;
+//     dBButtonDrawn = &mBButtonDrawn;
+//     dBButtonEnabled = &mBButtonEnabled;
+// }
