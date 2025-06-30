@@ -235,13 +235,10 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
     
     OPEN_DISPS(play->state.gfxCtx);
     
-    // Recomp doesn't seem to like this here or earlier? But when this printf isn't here or is later, the patch seems to not be applied. What's going on?
-    recomp_printf("test\n");
-
     gDPPipeSync(OVERLAY_DISP++);
     gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
     // Fix green ammo (and potentially more if elements are disabled) bug described in Interface_DrawAmmoCount
-    gDPSetEnvColor(0, 0, 0, 0, 255);
+    gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 255);
     
     // B, C-Left, C-Down, C-Right
     for (temp = EQUIP_SLOT_B; temp <= EQUIP_SLOT_C_RIGHT; temp++) {
