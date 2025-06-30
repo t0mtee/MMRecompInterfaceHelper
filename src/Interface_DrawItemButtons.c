@@ -89,6 +89,12 @@ s16 mButtonColours[4][3] = {
     {255, 240, 0},                      // EQUIP_SLOT_C_DOWN
     {255, 240, 0}                       // EQUIP_SLOT_C_RIGHT
 };
+s16 mButtonAlphas[4] = {
+    255,                                // EQUIP_SLOT_B
+    255,                                // EQUIP_SLOT_C_LEFT
+    255,                                // EQUIP_SLOT_C_DOWN
+    255                                 // EQUIP_SLOT_C_RIGHT
+};
 RECOMP_DECLARE_EVENT(button_hook_return(PlayState* play, EquipSlot button))
 
 bool mStartForceEnabled = false;
@@ -170,7 +176,7 @@ int mCUpLabelScaleX = 1 << 10;
 int mCUpLabelScaleY = 1 << 10;
 RECOMP_DECLARE_EVENT(c_up_label_hook_return(PlayState* play, s16* alpha))
 
-RECOMP_DECLARE_EVENT(c_glyph_hook_init(PlayState* play, s16* alpha))
+RECOMP_DECLARE_EVENT(c_glyph_hook_init(PlayState* play))
 bool mCGlyphsEnabled[3] = {
     true,                               // EQUIP_SLOT_C_LEFT
     true,                               // EQUIP_SLOT_C_DOWN
@@ -226,7 +232,16 @@ s16 mCGlyphColours[3][3] = {
     {255, 240, 0},                      // EQUIP_SLOT_C_DOWN
     {255, 240, 0}                       // EQUIP_SLOT_C_RIGHT
 };
-RECOMP_DECLARE_EVENT(c_glyph_hook_return(PlayState* play, s16* alpha))
+RECOMP_DECLARE_EVENT(c_glyph_hook_return(PlayState* play))
+
+RECOMP_HOOK("Interface_DrawItemButtons") void Interface_DrawItemButtons_Init(PlayState* play) {
+    InterfaceContext* interfaceCtx = &play->interfaceCtx;
+    
+    mButtonAlphas[0] = interfaceCtx->bAlpha;
+    mButtonAlphas[1] = interfaceCtx->cLeftAlpha;
+    mButtonAlphas[2] = interfaceCtx->cDownAlpha;
+    mButtonAlphas[3] = interfaceCtx->cRightAlpha;
+}
 
 RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
     InterfaceContext* interfaceCtx = &play->interfaceCtx;
@@ -251,7 +266,7 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
                 mButtonRectSizesX[temp], mButtonRectSizesY[temp],
                 mButtonScalesX[temp], mButtonScalesY[temp],
                 mButtonColours[temp][0], mButtonColours[temp][1], mButtonColours[temp][2],
-                interfaceCtx->cLeftAlpha);
+                mButtonAlphas[temp]);
             
             button_hook_return(play, temp);
         }
@@ -364,20 +379,11 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
     for (temp = EQUIP_SLOT_C_LEFT; temp <= EQUIP_SLOT_C_RIGHT; temp++) {
         int glyphTemp = temp - 1;
         if (mCGlyphsEnabled[glyphTemp] && GET_CUR_FORM_BTN_ITEM(temp) > 0xF0) {
-            s16 alpha;
-            if (temp == EQUIP_SLOT_C_LEFT) {
-                alpha = interfaceCtx->cLeftAlpha;
-            } else if (temp == EQUIP_SLOT_C_DOWN) {
-                alpha = interfaceCtx->cDownAlpha;
-            } else { // EQUIP_SLOT_C_RIGHT
-                alpha = interfaceCtx->cRightAlpha;
-            }
-            
-            c_glyph_hook_init(play, &alpha);
+            c_glyph_hook_init(play);
             
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0,
                 mCGlyphColours[glyphTemp][0], mCGlyphColours[glyphTemp][1], mCGlyphColours[glyphTemp][2],
-                alpha);
+                mButtonAlphas[temp]);
             OVERLAY_DISP =
                 Gfx_DrawTexRectIA8(
                     OVERLAY_DISP, mCGlyphTextures[glyphTemp], mCGlyphTextureWidths[glyphTemp], mCGlyphTextureHeights[glyphTemp],
@@ -385,7 +391,7 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
                         mCGlyphRectSizesX[glyphTemp], mCGlyphRectSizesY[glyphTemp],
                         mCGlyphScalesX[glyphTemp], mCGlyphScalesY[glyphTemp]);
             
-            c_glyph_hook_return(play, &alpha);
+            c_glyph_hook_return(play);
         }
     }
     
