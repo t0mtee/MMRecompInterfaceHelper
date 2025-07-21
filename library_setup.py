@@ -39,6 +39,9 @@ class Variable:
     def as_macro(self):
         return '_'.join(re.split('(?<=.)(?=[A-Z])', self.as_standard())).upper()
 
+print("Make sure that example.c and interface_helper.h are in the example folder before pressing enter.")
+input()
+
 variables = []
 
 for entry in os.scandir("./src"):
@@ -49,30 +52,31 @@ for entry in os.scandir("./src"):
                     variables.append(Variable(line))
 
 library =   "#include \"modding.h\"\n"
-library +=  "#include \"global.h\"\n\n"
+library +=  "#include \"global.h\""
 
 header =    "#ifndef INTERFACE_HELPER\n"
 header +=   "#define INTERFACE_HELPER\n\n"
 header += library
 
 for variable in variables:
-    library += f"extern {variable};\n\n"
+    library += f"\n\nextern {variable};\n\n"
     
     library += f"RECOMP_EXPORT " + variable.as_register() + "\n"
     library += "{\n"
     library += f"  *pointer = &{variable.name};\n"
-    library += "}\n\n"
+    library += "}"
 
-    header += f"#define {variable.as_macro()}_DECLARE RECOMP_IMPORT(\"mm_recomp_interface_helper\", {variable.as_register()}); \\"
+    header += f"\n\n#define {variable.as_macro()}_DECLARE RECOMP_IMPORT(\"mm_recomp_interface_helper\", {variable.as_register()}); \\"
     header += f"\n{variable.type} (*{variable.as_pointer()}){variable.size};\n\n"
     
-    header += f"#define {variable.as_macro()}_REGISTER {variable.as_call()}(&{variable.as_pointer()});\n\n"
+    header += f"#define {variable.as_macro()}_REGISTER {variable.as_call()}(&{variable.as_pointer()});"
 
-header +=   "#endif // INTERFACE_HELPER\n\n"
+header +=   "\n\n#endif // INTERFACE_HELPER"
 
-print(library + "Paste everything above into library.c and press enter to continue.")
+with open("./src/library.c", "w") as lib_file:
+    lib_file.write(library)
 
-input()
-print("\n=================================================\n\n")
+with open("./example/interface_helper.h", "w") as head_file:
+    head_file.write(header)
 
-print(header + "Paste everything above into interface_helper.h")
+print("Header and library files updated.")
