@@ -34,10 +34,7 @@ game_id = "mm"
 minimum_recomp_version = "1.2.0"
 
 # Dependency mods. Each entry is the mod's ID and then an optional minimum version of the dependency mod.
-dependencies = [
-# Example dependency:
-#    "modname:1.0.0"
-]
+dependencies = [ "mm_recomp_interface_helper" ]
 
 # Native libraries (e.g. DLLs) and the functions they export.
 native_libraries = [

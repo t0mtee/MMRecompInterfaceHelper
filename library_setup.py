@@ -1,4 +1,5 @@
 import os
+import re
 
 class Variable:
     type = ""
@@ -19,31 +20,59 @@ class Variable:
             self.size += parts[1][index:]
         else:
             self.name = parts[1]
-
+    
     def __str__(self):
         return f"{self.type} {self.name}{self.size}"
+    
+    def as_standard(self):
+        return self.name[1:]
+    
+    def as_pointer(self):
+        return f"p{self.as_standard()}"
+    
+    def as_call(self):
+        return f"{self.as_standard()}_Register"
+    
+    def as_register(self):
+        return f"void {self.as_call()}({self.type} (**pointer){variable.size})"
+    
+    def as_macro(self):
+        return '_'.join(re.split('(?<=.)(?=[A-Z])', self.as_standard())).upper()
 
 variables = []
 
 for entry in os.scandir("./src"):
-    if (entry.name != "test.c") and (entry.name[-2:] == ".c"):
-        with open(entry) as file:
-            for line in file:
+    if entry.name[-2:] == ".c":
+        with open(entry) as library:
+            for line in library:
                 if (line[0] != ' ') and ('=' in line):
                     variables.append(Variable(line))
 
-file =  "#include \"modding.h\"\n"
-file += "#include \"global.h\"\n\n"
+library =   "#include \"modding.h\"\n"
+library +=  "#include \"global.h\"\n\n"
+
+header =    "#ifndef INTERFACE_HELPER\n"
+header +=   "#define INTERFACE_HELPER\n\n"
+header += library
 
 for variable in variables:
-    file += f"extern {variable};\n\n"
+    library += f"extern {variable};\n\n"
     
-    file += f"RECOMP_EXPORT void {variable.name}_Register({variable.type} (**pointer)"
-    if variable.size != "":
-        file += f"{variable.size}"
-    file += f")\n"
-    file += "{\n"
-    file += f"  *pointer = &{variable.name};\n"
-    file += "}\n\n"
+    library += f"RECOMP_EXPORT " + variable.as_register() + "\n"
+    library += "{\n"
+    library += f"  *pointer = &{variable.name};\n"
+    library += "}\n\n"
 
-print(file + "Paste everything above into library.c")
+    header += f"#define {variable.as_macro()}_DECLARE RECOMP_IMPORT(\"mm_recomp_interface_helper\", {variable.as_register()}); \\"
+    header += f"\n{variable.type} (*{variable.as_pointer()}){variable.size};\n\n"
+    
+    header += f"#define {variable.as_macro()}_REGISTER {variable.as_call()}(&{variable.as_pointer()});\n\n"
+
+header +=   "#endif // INTERFACE_HELPER\n\n"
+
+print(library + "Paste everything above into library.c and press enter to continue.")
+
+input()
+print("\n=================================================\n\n")
+
+print(header + "Paste everything above into interface_helper.h")
