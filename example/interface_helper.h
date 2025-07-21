@@ -504,4 +504,49 @@ u16 (*pAmmoLowerScaleOnesY);
 
 #define AMMO_LOWER_SCALE_ONES_Y_REGISTER AmmoLowerScaleOnesY_Register(&pAmmoLowerScaleOnesY);
 
+#define ITEM_ICON_TEXTURE_OVERRIDE_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void ItemIconTextureOverride_Register(TexturePtr (**pointer))); \
+TexturePtr (*pItemIconTextureOverride);
+
+#define ITEM_ICON_TEXTURE_OVERRIDE_REGISTER ItemIconTextureOverride_Register(&pItemIconTextureOverride);
+
+#define ITEM_ICON_TEXTURE_WIDTH_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void ItemIconTextureWidth_Register(int (**pointer))); \
+int (*pItemIconTextureWidth);
+
+#define ITEM_ICON_TEXTURE_WIDTH_REGISTER ItemIconTextureWidth_Register(&pItemIconTextureWidth);
+
+#define ITEM_ICON_TEXTURE_HEIGHT_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void ItemIconTextureHeight_Register(int (**pointer))); \
+int (*pItemIconTextureHeight);
+
+#define ITEM_ICON_TEXTURE_HEIGHT_REGISTER ItemIconTextureHeight_Register(&pItemIconTextureHeight);
+
+#define ITEM_ICON_POSITIONS_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void ItemIconPositionsX_Register(s16 (**pointer)[])); \
+s16 (*pItemIconPositionsX)[];
+
+#define ITEM_ICON_POSITIONS_X_REGISTER ItemIconPositionsX_Register(&pItemIconPositionsX);
+
+#define ITEM_ICON_POSITIONS_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void ItemIconPositionsY_Register(s16 (**pointer)[])); \
+s16 (*pItemIconPositionsY)[];
+
+#define ITEM_ICON_POSITIONS_Y_REGISTER ItemIconPositionsY_Register(&pItemIconPositionsY);
+
+#define ITEM_ICON_RECT_SIZES_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void ItemIconRectSizesX_Register(s16 (**pointer)[])); \
+s16 (*pItemIconRectSizesX)[];
+
+#define ITEM_ICON_RECT_SIZES_X_REGISTER ItemIconRectSizesX_Register(&pItemIconRectSizesX);
+
+#define ITEM_ICON_RECT_SIZES_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void ItemIconRectSizesY_Register(s16 (**pointer)[])); \
+s16 (*pItemIconRectSizesY)[];
+
+#define ITEM_ICON_RECT_SIZES_Y_REGISTER ItemIconRectSizesY_Register(&pItemIconRectSizesY);
+
+#define ITEM_ICON_TEXTURE_DIMENSIONS_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void ItemIconTextureDimensions_Register(s16 (**pointer)[])); \
+s16 (*pItemIconTextureDimensions)[];
+
+#define ITEM_ICON_TEXTURE_DIMENSIONS_REGISTER ItemIconTextureDimensions_Register(&pItemIconTextureDimensions);
+
+#define ITEM_ICON_TEXTURE_SCALES_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void ItemIconTextureScales_Register(s16 (**pointer)[])); \
+s16 (*pItemIconTextureScales)[];
+
+#define ITEM_ICON_TEXTURE_SCALES_REGISTER ItemIconTextureScales_Register(&pItemIconTextureScales);
+
 #endif // INTERFACE_HELPER

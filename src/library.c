@@ -700,3 +700,66 @@ RECOMP_EXPORT void AmmoLowerScaleOnesY_Register(u16 (**pointer))
 {
   *pointer = &mAmmoLowerScaleOnesY;
 }
+
+extern TexturePtr mItemIconTextureOverride;
+
+RECOMP_EXPORT void ItemIconTextureOverride_Register(TexturePtr (**pointer))
+{
+  *pointer = &mItemIconTextureOverride;
+}
+
+extern int mItemIconTextureWidth;
+
+RECOMP_EXPORT void ItemIconTextureWidth_Register(int (**pointer))
+{
+  *pointer = &mItemIconTextureWidth;
+}
+
+extern int mItemIconTextureHeight;
+
+RECOMP_EXPORT void ItemIconTextureHeight_Register(int (**pointer))
+{
+  *pointer = &mItemIconTextureHeight;
+}
+
+extern s16 mItemIconPositionsX[];
+
+RECOMP_EXPORT void ItemIconPositionsX_Register(s16 (**pointer)[])
+{
+  *pointer = &mItemIconPositionsX;
+}
+
+extern s16 mItemIconPositionsY[];
+
+RECOMP_EXPORT void ItemIconPositionsY_Register(s16 (**pointer)[])
+{
+  *pointer = &mItemIconPositionsY;
+}
+
+extern s16 mItemIconRectSizesX[];
+
+RECOMP_EXPORT void ItemIconRectSizesX_Register(s16 (**pointer)[])
+{
+  *pointer = &mItemIconRectSizesX;
+}
+
+extern s16 mItemIconRectSizesY[];
+
+RECOMP_EXPORT void ItemIconRectSizesY_Register(s16 (**pointer)[])
+{
+  *pointer = &mItemIconRectSizesY;
+}
+
+extern s16 mItemIconTextureDimensions[];
+
+RECOMP_EXPORT void ItemIconTextureDimensions_Register(s16 (**pointer)[])
+{
+  *pointer = &mItemIconTextureDimensions;
+}
+
+extern s16 mItemIconTextureScales[];
+
+RECOMP_EXPORT void ItemIconTextureScales_Register(s16 (**pointer)[])
+{
+  *pointer = &mItemIconTextureScales;
+}
