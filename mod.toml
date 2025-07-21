@@ -17,6 +17,8 @@ display_name = "Interface Helper"
 description =  """
 A library mod that provides exposes more data in Interface functions.
 
+Should be placed towards the bottom of your load order.
+
 Does not perform any conflict checks. You have to ensure that any dependents of this mod don't change the same variables, or that variables are changed in a priority that works for you.
 """
 
@@ -60,3 +62,51 @@ data_reference_syms_files = [ "Zelda64RecompSyms/mm.us.rev1.datasyms.toml", "Zel
 
 # Additional files to include in the mod.
 additional_files = [ "thumb.png" ]
+
+[[manifest.config_options]]
+id = "green_ammo_fix"
+name = "Green Ammo Fix"
+description = """
+In base Majora's Mask, there is a bug where ammo is drawn as green instead of white before the magic meter is obtained.
+
+Enable this option to fix that bug.
+"""
+type = "Enum"
+options = [ "Disabled", "Enabled" ]
+default = "Enabled"
+
+[[manifest.config_options]]
+id = "deku_empty_fix"
+name = "Deku Empty C-button Fix"
+description = """
+In base Majora's Mask, there is a bug where empty C-buttons are only disabled if your current form is the Deku.
+
+Enable this option to fix that bug.
+"""
+type = "Enum"
+options = [ "Disabled", "Enabled" ]
+default = "Enabled"
+
+[[manifest.config_options]]
+id = "enable_empty_attack"
+name = "Enable Empty Attack Button"
+description = """
+In base Majora's Mask, when the Attack button is empty, it is disabled, unlike the other buttons. 
+
+Enable this option to enable the Attack button when empty.
+"""
+type = "Enum"
+options = [ "Disabled", "Enabled" ]
+default = "Disabled"
+
+[[manifest.config_options]]
+id = "attack_item_scale"
+name = "Attack Item Scale"
+description = """
+In base Majora's Mask, the icons of the items drawn on the Attack button are, in comparison and relative to items drawn on the C-buttons, quite large.
+
+Enable this option to bring them more in line with C-button items.
+"""
+type = "Enum"
+options = [ "Disabled", "Enabled" ]
+default = "Disabled"

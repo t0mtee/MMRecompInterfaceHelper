@@ -253,7 +253,9 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
     gDPPipeSync(OVERLAY_DISP++);
     gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
     // Fix green ammo (and potentially more if elements are disabled) bug described in Interface_DrawAmmoCount
-    gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 255);
+    if (recomp_get_config_u32("green_ammo_fix") == true) {
+        gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 255);
+    }
     
     // B, C-Left, C-Down, C-Right
     for (temp = EQUIP_SLOT_B; temp <= EQUIP_SLOT_C_RIGHT; temp++) {
