@@ -26,7 +26,7 @@ class Variable:
 variables = []
 
 for entry in os.scandir("./src"):
-    if (entry.name != "library.c") and (entry.name[-2:] == ".c"):
+    if (entry.name != "test.c") and (entry.name[-2:] == ".c"):
         with open(entry) as file:
             for line in file:
                 if (line[0] != ' ') and ('=' in line):

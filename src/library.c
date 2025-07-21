@@ -498,6 +498,20 @@ RECOMP_EXPORT void mCGlyphColours_Register(s16 (**pointer)[3][3])
   *pointer = &mCGlyphColours;
 }
 
+extern bool mBButtonDrawn;
+
+RECOMP_EXPORT void mBButtonDrawn_Register(bool (**pointer))
+{
+  *pointer = &mBButtonDrawn;
+}
+
+extern bool mBButtonEnabled[8];
+
+RECOMP_EXPORT void mBButtonEnabled_Register(bool (**pointer)[8])
+{
+  *pointer = &mBButtonEnabled;
+}
+
 extern int mAmmoPrimColour[3];
 
 RECOMP_EXPORT void mAmmoPrimColour_Register(int (**pointer)[3])
@@ -685,18 +699,4 @@ extern u16 mAmmoLowerScaleOnesY;
 RECOMP_EXPORT void mAmmoLowerScaleOnesY_Register(u16 (**pointer))
 {
   *pointer = &mAmmoLowerScaleOnesY;
-}
-
-extern bool mBButtonDrawn;
-
-RECOMP_EXPORT void mBButtonDrawn_Register(bool (**pointer))
-{
-  *pointer = &mBButtonDrawn;
-}
-
-extern bool mBButtonEnabled[8];
-
-RECOMP_EXPORT void mBButtonEnabled_Register(bool (**pointer)[8])
-{
-  *pointer = &mBButtonEnabled;
 }
