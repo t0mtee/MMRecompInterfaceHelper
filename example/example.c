@@ -1,6 +1,6 @@
 #include "interface_helper.h"
 
-// Place contents of this folder in /src to build
+// Place contents of this folder in /src and add "mm_recomp_interface_helper" to mod.toml dependencies to build
 
 START_BUTTON_POSITION_X_DECLARE
 BUTTONS_ENABLED_DECLARE
