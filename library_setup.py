@@ -46,7 +46,7 @@ variables = []
 
 for entry in os.scandir("./src"):
     if entry.name[-2:] == ".c":
-        with open(entry) as library:
+        with open(entry, "r") as library:
             for line in library:
                 if (line[0] != ' ') and ('=' in line):
                     variables.append(Variable(line))
