@@ -59,16 +59,18 @@ header +=   "#define INTERFACE_HELPER\n\n"
 header += library
 
 for variable in variables:
-    library += f"\n\nextern {variable};\n\n"
-    
+    library += "\n\n"
+    library += f"extern {variable};\n"
+    library += "\n"
     library += f"RECOMP_EXPORT " + variable.as_register() + "\n"
     library += "{\n"
     library += f"  *pointer = &{variable.name};\n"
     library += "}"
-
-    header += f"\n\n#define {variable.as_macro()}_DECLARE RECOMP_IMPORT(\"mm_recomp_interface_helper\", {variable.as_register()}); \\"
-    header += f"\n{variable.type} (*{variable.as_pointer()}){variable.size};\n\n"
     
+    header += "\n\n"
+    header += f"#define {variable.as_macro()}_DECLARE RECOMP_IMPORT(\"mm_recomp_interface_helper\", {variable.as_register()}); \\\n"
+    header += f"{variable.type} (*{variable.as_pointer()}){variable.size};\n"
+    header += "\n"
     header += f"#define {variable.as_macro()}_REGISTER {variable.as_call()}(&{variable.as_pointer()});"
 
 header +=   "\n\n#endif // INTERFACE_HELPER"
