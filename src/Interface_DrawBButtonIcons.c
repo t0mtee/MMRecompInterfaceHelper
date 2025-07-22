@@ -10,6 +10,7 @@ extern s16 sBButtonDoActionYPositions[];
 extern void Interface_DrawItemIconTexture(PlayState* play, TexturePtr texture, s16 button);
 extern void Interface_DrawAmmoCount(PlayState* play, s16 button, s16 alpha);
 
+// Set to false every frame at the end of Interface_DrawItemButtons
 bool mBButtonDrawn = false;
 bool mBButtonEnabled[8] = {true, true, true, true, true, true, true, true};
 
@@ -35,9 +36,7 @@ RECOMP_PATCH void Interface_DrawBButtonIcons(PlayState* play) {
     gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->bAlpha);
     gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
 
-    u8 bButtonIcon = BUTTON_ITEM_EQUIP(CUR_FORM, EQUIP_SLOT_B);
-
-    mBButtonDrawn = false;
+    u8 bButtonItem = BUTTON_ITEM_EQUIP(CUR_FORM, EQUIP_SLOT_B);
 
     if (mBButtonEnabled[0] && !interfaceCtx->bButtonInterfaceDoActionActive && (player->stateFlags3 & PLAYER_STATE3_1000000)) {
         if (gSaveContext.buttonStatus[EQUIP_SLOT_B] != BTN_DISABLED) {
@@ -56,14 +55,14 @@ RECOMP_PATCH void Interface_DrawBButtonIcons(PlayState* play) {
         }
     } else if (mBButtonEnabled[1] &&
                 ((!interfaceCtx->bButtonPlayerDoActionActive && !interfaceCtx->bButtonInterfaceDoActionActive) ||
-                ((interfaceCtx->bButtonPlayerDoActionActive && ((bButtonIcon < ITEM_SWORD_KOKIRI) ||
-                (bButtonIcon > ITEM_SWORD_GILDED)) && bButtonIcon != ITEM_NONE) &&
-                (bButtonIcon != ITEM_DEKU_NUT)))) {
+                ((interfaceCtx->bButtonPlayerDoActionActive && ((bButtonItem < ITEM_SWORD_KOKIRI) ||
+                (bButtonItem > ITEM_SWORD_GILDED)) && bButtonItem != ITEM_NONE) &&
+                (bButtonItem != ITEM_DEKU_NUT)))) {
         if (mBButtonEnabled[2] && ((player->transformation == PLAYER_FORM_FIERCE_DEITY) || (player->transformation == PLAYER_FORM_HUMAN))) {
-            if (mBButtonEnabled[3] && bButtonIcon != ITEM_NONE) {
+            if (mBButtonEnabled[3] && bButtonItem != ITEM_NONE) {
                 mBButtonDrawn = true;
                 
-                b_button_minigame_init(play, &bButtonIcon);
+                b_button_minigame_init(play, &bButtonItem);
 
                 Interface_DrawItemIconTexture(play, interfaceCtx->iconItemSegment, EQUIP_SLOT_B);
                 if (mBButtonEnabled[4] && ((player->stateFlags1 & PLAYER_STATE1_800000) || CHECK_WEEKEVENTREG(WEEKEVENTREG_08_01) ||
@@ -82,7 +81,7 @@ RECOMP_PATCH void Interface_DrawBButtonIcons(PlayState* play) {
                     }
                 }
                 
-                b_button_minigame_return(play, &bButtonIcon);
+                b_button_minigame_return(play, &bButtonItem);
             }
         }
     } else if (mBButtonEnabled[6] && interfaceCtx->bButtonInterfaceDoActionActive) {

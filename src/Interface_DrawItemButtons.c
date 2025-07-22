@@ -234,6 +234,8 @@ s16 mCGlyphColours[3][3] = {
 };
 RECOMP_DECLARE_EVENT(c_glyph_hook_return(PlayState* play))
 
+extern bool mBButtonDrawn;
+
 RECOMP_HOOK("Interface_DrawItemButtons") void Interface_DrawItemButtons_Init(PlayState* play) {
     InterfaceContext* interfaceCtx = &play->interfaceCtx;
     
@@ -398,4 +400,6 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
     }
     
     CLOSE_DISPS(play->state.gfxCtx);
+
+    mBButtonDrawn = false;
 }
