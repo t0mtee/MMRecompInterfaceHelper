@@ -1,6 +1,209 @@
 #include "modding.h"
 #include "global.h"
 
+extern int mAmmoPrimColour[3];
+
+RECOMP_EXPORT void AmmoPrimColour_Register(int (**pointer)[3])
+{
+  *pointer = &mAmmoPrimColour;
+}
+
+extern int mAmmoEnvColour[4];
+
+RECOMP_EXPORT void AmmoEnvColour_Register(int (**pointer)[4])
+{
+  *pointer = &mAmmoEnvColour;
+}
+
+extern bool mAmmoForceMaxColour;
+
+RECOMP_EXPORT void AmmoForceMaxColour_Register(bool (**pointer))
+{
+  *pointer = &mAmmoForceMaxColour;
+}
+
+extern int mAmmoFullColour[3];
+
+RECOMP_EXPORT void AmmoFullColour_Register(int (**pointer)[3])
+{
+  *pointer = &mAmmoFullColour;
+}
+
+extern int mAmmoEmptyColour[3];
+
+RECOMP_EXPORT void AmmoEmptyColour_Register(int (**pointer)[3])
+{
+  *pointer = &mAmmoEmptyColour;
+}
+
+extern TexturePtr mAmmoTextureTens;
+
+RECOMP_EXPORT void AmmoTextureTens_Register(TexturePtr (**pointer))
+{
+  *pointer = &mAmmoTextureTens;
+}
+
+extern s16 mAmmoTextureWidthTens;
+
+RECOMP_EXPORT void AmmoTextureWidthTens_Register(s16 (**pointer))
+{
+  *pointer = &mAmmoTextureWidthTens;
+}
+
+extern s16 mAmmoTextureHeightTens;
+
+RECOMP_EXPORT void AmmoTextureHeightTens_Register(s16 (**pointer))
+{
+  *pointer = &mAmmoTextureHeightTens;
+}
+
+extern s16 mAmmoPositionsTensX[4];
+
+RECOMP_EXPORT void AmmoPositionsTensX_Register(s16 (**pointer)[4])
+{
+  *pointer = &mAmmoPositionsTensX;
+}
+
+extern s16 mAmmoPositionsTensY[4];
+
+RECOMP_EXPORT void AmmoPositionsTensY_Register(s16 (**pointer)[4])
+{
+  *pointer = &mAmmoPositionsTensY;
+}
+
+extern s16 mAmmoRectSizeTensX[4];
+
+RECOMP_EXPORT void AmmoRectSizeTensX_Register(s16 (**pointer)[4])
+{
+  *pointer = &mAmmoRectSizeTensX;
+}
+
+extern s16 mAmmoRectSizeTensY[4];
+
+RECOMP_EXPORT void AmmoRectSizeTensY_Register(s16 (**pointer)[4])
+{
+  *pointer = &mAmmoRectSizeTensY;
+}
+
+extern u16 mAmmoUpperScaleTensX;
+
+RECOMP_EXPORT void AmmoUpperScaleTensX_Register(u16 (**pointer))
+{
+  *pointer = &mAmmoUpperScaleTensX;
+}
+
+extern u16 mAmmoUpperScaleTensY;
+
+RECOMP_EXPORT void AmmoUpperScaleTensY_Register(u16 (**pointer))
+{
+  *pointer = &mAmmoUpperScaleTensY;
+}
+
+extern u16 mAmmoLowerScaleTensX;
+
+RECOMP_EXPORT void AmmoLowerScaleTensX_Register(u16 (**pointer))
+{
+  *pointer = &mAmmoLowerScaleTensX;
+}
+
+extern u16 mAmmoLowerScaleTensY;
+
+RECOMP_EXPORT void AmmoLowerScaleTensY_Register(u16 (**pointer))
+{
+  *pointer = &mAmmoLowerScaleTensY;
+}
+
+extern TexturePtr mAmmoTextureOnes;
+
+RECOMP_EXPORT void AmmoTextureOnes_Register(TexturePtr (**pointer))
+{
+  *pointer = &mAmmoTextureOnes;
+}
+
+extern s16 mAmmoTextureWidthOnes;
+
+RECOMP_EXPORT void AmmoTextureWidthOnes_Register(s16 (**pointer))
+{
+  *pointer = &mAmmoTextureWidthOnes;
+}
+
+extern s16 mAmmoTextureHeightOnes;
+
+RECOMP_EXPORT void AmmoTextureHeightOnes_Register(s16 (**pointer))
+{
+  *pointer = &mAmmoTextureHeightOnes;
+}
+
+extern s16 mAmmoPositionsOnesX[4];
+
+RECOMP_EXPORT void AmmoPositionsOnesX_Register(s16 (**pointer)[4])
+{
+  *pointer = &mAmmoPositionsOnesX;
+}
+
+extern s16 mAmmoPositionsOnesY[4];
+
+RECOMP_EXPORT void AmmoPositionsOnesY_Register(s16 (**pointer)[4])
+{
+  *pointer = &mAmmoPositionsOnesY;
+}
+
+extern s16 mAmmoRectSizeOnesX[4];
+
+RECOMP_EXPORT void AmmoRectSizeOnesX_Register(s16 (**pointer)[4])
+{
+  *pointer = &mAmmoRectSizeOnesX;
+}
+
+extern s16 mAmmoRectSizeOnesY[4];
+
+RECOMP_EXPORT void AmmoRectSizeOnesY_Register(s16 (**pointer)[4])
+{
+  *pointer = &mAmmoRectSizeOnesY;
+}
+
+extern u16 mAmmoUpperScaleOnesX;
+
+RECOMP_EXPORT void AmmoUpperScaleOnesX_Register(u16 (**pointer))
+{
+  *pointer = &mAmmoUpperScaleOnesX;
+}
+
+extern u16 mAmmoUpperScaleOnesY;
+
+RECOMP_EXPORT void AmmoUpperScaleOnesY_Register(u16 (**pointer))
+{
+  *pointer = &mAmmoUpperScaleOnesY;
+}
+
+extern u16 mAmmoLowerScaleOnesX;
+
+RECOMP_EXPORT void AmmoLowerScaleOnesX_Register(u16 (**pointer))
+{
+  *pointer = &mAmmoLowerScaleOnesX;
+}
+
+extern u16 mAmmoLowerScaleOnesY;
+
+RECOMP_EXPORT void AmmoLowerScaleOnesY_Register(u16 (**pointer))
+{
+  *pointer = &mAmmoLowerScaleOnesY;
+}
+
+extern bool mBButtonDrawn;
+
+RECOMP_EXPORT void BButtonDrawn_Register(bool (**pointer))
+{
+  *pointer = &mBButtonDrawn;
+}
+
+extern bool mBButtonEnabled[8];
+
+RECOMP_EXPORT void BButtonEnabled_Register(bool (**pointer)[8])
+{
+  *pointer = &mBButtonEnabled;
+}
+
 extern bool mButtonsEnabled[4];
 
 RECOMP_EXPORT void ButtonsEnabled_Register(bool (**pointer)[4])
@@ -496,209 +699,6 @@ extern s16 mCGlyphColours[3][3];
 RECOMP_EXPORT void CGlyphColours_Register(s16 (**pointer)[3][3])
 {
   *pointer = &mCGlyphColours;
-}
-
-extern bool mBButtonDrawn;
-
-RECOMP_EXPORT void BButtonDrawn_Register(bool (**pointer))
-{
-  *pointer = &mBButtonDrawn;
-}
-
-extern bool mBButtonEnabled[8];
-
-RECOMP_EXPORT void BButtonEnabled_Register(bool (**pointer)[8])
-{
-  *pointer = &mBButtonEnabled;
-}
-
-extern int mAmmoPrimColour[3];
-
-RECOMP_EXPORT void AmmoPrimColour_Register(int (**pointer)[3])
-{
-  *pointer = &mAmmoPrimColour;
-}
-
-extern int mAmmoEnvColour[4];
-
-RECOMP_EXPORT void AmmoEnvColour_Register(int (**pointer)[4])
-{
-  *pointer = &mAmmoEnvColour;
-}
-
-extern bool mAmmoForceMaxColour;
-
-RECOMP_EXPORT void AmmoForceMaxColour_Register(bool (**pointer))
-{
-  *pointer = &mAmmoForceMaxColour;
-}
-
-extern int mAmmoFullColour[3];
-
-RECOMP_EXPORT void AmmoFullColour_Register(int (**pointer)[3])
-{
-  *pointer = &mAmmoFullColour;
-}
-
-extern int mAmmoEmptyColour[3];
-
-RECOMP_EXPORT void AmmoEmptyColour_Register(int (**pointer)[3])
-{
-  *pointer = &mAmmoEmptyColour;
-}
-
-extern TexturePtr mAmmoTextureTens;
-
-RECOMP_EXPORT void AmmoTextureTens_Register(TexturePtr (**pointer))
-{
-  *pointer = &mAmmoTextureTens;
-}
-
-extern s16 mAmmoTextureWidthTens;
-
-RECOMP_EXPORT void AmmoTextureWidthTens_Register(s16 (**pointer))
-{
-  *pointer = &mAmmoTextureWidthTens;
-}
-
-extern s16 mAmmoTextureHeightTens;
-
-RECOMP_EXPORT void AmmoTextureHeightTens_Register(s16 (**pointer))
-{
-  *pointer = &mAmmoTextureHeightTens;
-}
-
-extern s16 mAmmoPositionsTensX[4];
-
-RECOMP_EXPORT void AmmoPositionsTensX_Register(s16 (**pointer)[4])
-{
-  *pointer = &mAmmoPositionsTensX;
-}
-
-extern s16 mAmmoPositionsTensY[4];
-
-RECOMP_EXPORT void AmmoPositionsTensY_Register(s16 (**pointer)[4])
-{
-  *pointer = &mAmmoPositionsTensY;
-}
-
-extern s16 mAmmoRectSizeTensX[4];
-
-RECOMP_EXPORT void AmmoRectSizeTensX_Register(s16 (**pointer)[4])
-{
-  *pointer = &mAmmoRectSizeTensX;
-}
-
-extern s16 mAmmoRectSizeTensY[4];
-
-RECOMP_EXPORT void AmmoRectSizeTensY_Register(s16 (**pointer)[4])
-{
-  *pointer = &mAmmoRectSizeTensY;
-}
-
-extern u16 mAmmoUpperScaleTensX;
-
-RECOMP_EXPORT void AmmoUpperScaleTensX_Register(u16 (**pointer))
-{
-  *pointer = &mAmmoUpperScaleTensX;
-}
-
-extern u16 mAmmoUpperScaleTensY;
-
-RECOMP_EXPORT void AmmoUpperScaleTensY_Register(u16 (**pointer))
-{
-  *pointer = &mAmmoUpperScaleTensY;
-}
-
-extern u16 mAmmoLowerScaleTensX;
-
-RECOMP_EXPORT void AmmoLowerScaleTensX_Register(u16 (**pointer))
-{
-  *pointer = &mAmmoLowerScaleTensX;
-}
-
-extern u16 mAmmoLowerScaleTensY;
-
-RECOMP_EXPORT void AmmoLowerScaleTensY_Register(u16 (**pointer))
-{
-  *pointer = &mAmmoLowerScaleTensY;
-}
-
-extern TexturePtr mAmmoTextureOnes;
-
-RECOMP_EXPORT void AmmoTextureOnes_Register(TexturePtr (**pointer))
-{
-  *pointer = &mAmmoTextureOnes;
-}
-
-extern s16 mAmmoTextureWidthOnes;
-
-RECOMP_EXPORT void AmmoTextureWidthOnes_Register(s16 (**pointer))
-{
-  *pointer = &mAmmoTextureWidthOnes;
-}
-
-extern s16 mAmmoTextureHeightOnes;
-
-RECOMP_EXPORT void AmmoTextureHeightOnes_Register(s16 (**pointer))
-{
-  *pointer = &mAmmoTextureHeightOnes;
-}
-
-extern s16 mAmmoPositionsOnesX[4];
-
-RECOMP_EXPORT void AmmoPositionsOnesX_Register(s16 (**pointer)[4])
-{
-  *pointer = &mAmmoPositionsOnesX;
-}
-
-extern s16 mAmmoPositionsOnesY[4];
-
-RECOMP_EXPORT void AmmoPositionsOnesY_Register(s16 (**pointer)[4])
-{
-  *pointer = &mAmmoPositionsOnesY;
-}
-
-extern s16 mAmmoRectSizeOnesX[4];
-
-RECOMP_EXPORT void AmmoRectSizeOnesX_Register(s16 (**pointer)[4])
-{
-  *pointer = &mAmmoRectSizeOnesX;
-}
-
-extern s16 mAmmoRectSizeOnesY[4];
-
-RECOMP_EXPORT void AmmoRectSizeOnesY_Register(s16 (**pointer)[4])
-{
-  *pointer = &mAmmoRectSizeOnesY;
-}
-
-extern u16 mAmmoUpperScaleOnesX;
-
-RECOMP_EXPORT void AmmoUpperScaleOnesX_Register(u16 (**pointer))
-{
-  *pointer = &mAmmoUpperScaleOnesX;
-}
-
-extern u16 mAmmoUpperScaleOnesY;
-
-RECOMP_EXPORT void AmmoUpperScaleOnesY_Register(u16 (**pointer))
-{
-  *pointer = &mAmmoUpperScaleOnesY;
-}
-
-extern u16 mAmmoLowerScaleOnesX;
-
-RECOMP_EXPORT void AmmoLowerScaleOnesX_Register(u16 (**pointer))
-{
-  *pointer = &mAmmoLowerScaleOnesX;
-}
-
-extern u16 mAmmoLowerScaleOnesY;
-
-RECOMP_EXPORT void AmmoLowerScaleOnesY_Register(u16 (**pointer))
-{
-  *pointer = &mAmmoLowerScaleOnesY;
 }
 
 extern TexturePtr mItemIconTextureOverride;

@@ -44,7 +44,7 @@ input()
 
 variables = []
 
-for entry in os.scandir("./src"):
+for entry in sorted(os.scandir("./src"), key=lambda f: f.name):
     if entry.name[-2:] == ".c":
         with open(entry, "r") as library:
             for line in library:
