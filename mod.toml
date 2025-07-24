@@ -67,7 +67,7 @@ additional_files = [ "thumb.png" ]
 id = "green_ammo_fix"
 name = "Green Ammo Fix"
 description = """
-In base Majora's Mask, there is a bug where ammo is drawn as green instead of white before the magic meter is obtained.
+In base Majora's Mask, there is a bug where ammo (and potentially other UI elements) are drawn with a green rim instead of a black one before the magic meter is obtained.
 
 Enable this option to fix that bug.
 """

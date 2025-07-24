@@ -6,8 +6,6 @@
 extern TexturePtr gAmmoDigit0Tex[];
 
 RECOMP_DECLARE_EVENT(ammo_hook_init(PlayState* play, u8 item, u16* ammo))
-int mAmmoPrimColour[3] = {255, 255, 255};
-int mAmmoEnvColour[4] = {0, 0, 0, 255};
 bool mAmmoForceMaxColour = false;
 int mAmmoFullColour[3] = {120, 255, 0};
 int mAmmoEmptyColour[3] = {100, 100, 100};
@@ -78,6 +76,8 @@ u16 mAmmoLowerScaleOnesY = 1 << 10;
 RECOMP_DECLARE_EVENT(ammo_hook_return(PlayState* play, u8 item))
 
 RECOMP_PATCH void Interface_DrawAmmoCount(PlayState* play, s16 button, s16 alpha) {
+    mAmmoForceMaxColour = false;
+
     u8 i;
     u16 ammo;
 
@@ -110,8 +110,6 @@ RECOMP_PATCH void Interface_DrawAmmoCount(PlayState* play, s16 button, s16 alpha
         //! causing the ammo count to be drawn incorrectly. This is most obvious when you get deku nuts early on, and
         //! the ammo count is drawn with a shade of green.
         // @interface_helper Fixed in Interface_DrawItemButtons
-        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, mAmmoPrimColour[0], mAmmoPrimColour[1], mAmmoPrimColour[2], alpha);
-        gDPSetEnvColor(OVERLAY_DISP++, mAmmoEnvColour[0], mAmmoEnvColour[1], mAmmoEnvColour[2], mAmmoEnvColour[3]);
         
         ammo_hook_init(play, i, &ammo);
 

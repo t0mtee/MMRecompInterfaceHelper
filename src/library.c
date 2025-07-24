@@ -1,20 +1,6 @@
 #include "modding.h"
 #include "global.h"
 
-extern int mAmmoPrimColour[3];
-
-RECOMP_EXPORT void AmmoPrimColour_Register(int (**pointer)[3])
-{
-  *pointer = &mAmmoPrimColour;
-}
-
-extern int mAmmoEnvColour[4];
-
-RECOMP_EXPORT void AmmoEnvColour_Register(int (**pointer)[4])
-{
-  *pointer = &mAmmoEnvColour;
-}
-
 extern bool mAmmoForceMaxColour;
 
 RECOMP_EXPORT void AmmoForceMaxColour_Register(bool (**pointer))

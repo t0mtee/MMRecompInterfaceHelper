@@ -4,16 +4,6 @@
 #include "modding.h"
 #include "global.h"
 
-#define AMMO_PRIM_COLOUR_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoPrimColour_Register(int (**pointer)[3])); \
-int (*pAmmoPrimColour)[3];
-
-#define AMMO_PRIM_COLOUR_REGISTER AmmoPrimColour_Register(&pAmmoPrimColour);
-
-#define AMMO_ENV_COLOUR_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoEnvColour_Register(int (**pointer)[4])); \
-int (*pAmmoEnvColour)[4];
-
-#define AMMO_ENV_COLOUR_REGISTER AmmoEnvColour_Register(&pAmmoEnvColour);
-
 #define AMMO_FORCE_MAX_COLOUR_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoForceMaxColour_Register(bool (**pointer))); \
 bool (*pAmmoForceMaxColour);
 
