@@ -43,6 +43,14 @@ print("Make sure that example.c and interface_helper.h are in the example folder
 input()
 
 variables = []
+version = ""
+
+with open("./mod.toml", "r") as mod_config:
+    for line in mod_config:
+        if line.startswith("version = "):
+            version = line[11:-2]
+
+print("Updating library to v" + version + ".")
 
 for entry in sorted(os.scandir("./src"), key=lambda f: f.name):
     if entry.name[-2:] == ".c":
@@ -54,9 +62,12 @@ for entry in sorted(os.scandir("./src"), key=lambda f: f.name):
 library =   "#include \"modding.h\"\n"
 library +=  "#include \"global.h\""
 
-header =    "#ifndef INTERFACE_HELPER\n"
-header +=   "#define INTERFACE_HELPER\n\n"
-header += library
+header =    "#ifndef __INTERFACE_HELPER__\n"
+header +=   "#define __INTERFACE_HELPER__\n"
+header +=   "\n"
+header +=   "// Interface Helper header v" + version + "\n"
+header +=   "\n"
+header +=   library
 
 for variable in variables:
     library += "\n\n"
