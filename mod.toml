@@ -15,7 +15,7 @@ display_name = "Interface Helper"
 
 # The description that will show up when this mod is displayed in the mod menu. This should be human readable.
 description =  """
-A library mod that provides exposes more data in Interface functions.
+A library mod that exposes more data in Interface functions.
 
 Should be placed towards the bottom of your load order.
 
