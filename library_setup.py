@@ -43,6 +43,7 @@ print("Make sure that example.c and interface_helper.h are in the example folder
 input()
 
 variables = []
+HEADER_NAME = "__INTERFACE_HELPER__"
 version = ""
 
 with open("./mod.toml", "r") as mod_config:
@@ -62,8 +63,8 @@ for entry in sorted(os.scandir("./src"), key=lambda f: f.name):
 library =   "#include \"modding.h\"\n"
 library +=  "#include \"global.h\""
 
-header =    "#ifndef __INTERFACE_HELPER__\n"
-header +=   "#define __INTERFACE_HELPER__\n"
+header =    "#ifndef " + HEADER_NAME + "\n"
+header +=   "#define " + HEADER_NAME + "\n"
 header +=   "\n"
 header +=   "// Interface Helper header v" + version + "\n"
 header +=   "\n"
@@ -84,7 +85,7 @@ for variable in variables:
     header += "\n"
     header += f"#define {variable.as_macro()}_REGISTER {variable.as_call()}(&{variable.as_pointer()});"
 
-header +=   "\n\n#endif // INTERFACE_HELPER"
+header +=   "\n\n#endif // " + HEADER_NAME
 
 with open("./src/library.c", "w") as lib_file:
     lib_file.write(library)
