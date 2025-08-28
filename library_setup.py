@@ -54,7 +54,7 @@ with open("./mod.toml", "r") as mod_config:
 print("Updating library to v" + version + ".")
 
 for entry in sorted(os.scandir("./src"), key=lambda f: f.name):
-    if entry.name[-2:] == ".c":
+    if (entry.name[-2:] == ".c") and (entry.name != "fixes.c"):
         with open(entry, "r") as library:
             for line in library:
                 if (line[0] != ' ') and ('=' in line):
