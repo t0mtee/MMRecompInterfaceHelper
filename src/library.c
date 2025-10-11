@@ -749,3 +749,31 @@ RECOMP_EXPORT void ItemIconTextureScales_Register(s16 (**pointer)[])
 {
   *pointer = &mItemIconTextureScales;
 }
+
+extern s16 mBItemEquipPositionX;
+
+RECOMP_EXPORT void BItemEquipPositionX_Register(s16 (**pointer))
+{
+  *pointer = &mBItemEquipPositionX;
+}
+
+extern s16 mBItemEquipPositionY;
+
+RECOMP_EXPORT void BItemEquipPositionY_Register(s16 (**pointer))
+{
+  *pointer = &mBItemEquipPositionY;
+}
+
+extern s16 mAItemEquipPositionX;
+
+RECOMP_EXPORT void AItemEquipPositionX_Register(s16 (**pointer))
+{
+  *pointer = &mAItemEquipPositionX;
+}
+
+extern s16 mAItemEquipPositionY;
+
+RECOMP_EXPORT void AItemEquipPositionY_Register(s16 (**pointer))
+{
+  *pointer = &mAItemEquipPositionY;
+}
