@@ -22,7 +22,7 @@ extern Gfx* Gfx_DrawTexRectIA8_DropShadow(Gfx* gfx, TexturePtr texture, s16 text
                                    s16 rectTop, s16 rectWidth, s16 rectHeight, u16 dsdx, u16 dtdy, s16 r, s16 g, s16 b,
                                    s16 a);
 
-RECOMP_DECLARE_EVENT(button_hook_init(PlayState* play, EquipSlot button))
+RECOMP_DECLARE_EVENT(button_event_init(PlayState* play, EquipSlot button))
 bool mButtonsEnabled[4] = {
     true,                               // EQUIP_SLOT_B
     true,                               // EQUIP_SLOT_C_LEFT
@@ -95,11 +95,11 @@ s16 mButtonAlphas[4] = {
     255,                                // EQUIP_SLOT_C_DOWN
     255                                 // EQUIP_SLOT_C_RIGHT
 };
-RECOMP_DECLARE_EVENT(button_hook_return(PlayState* play, EquipSlot button))
+RECOMP_DECLARE_EVENT(button_event_return(PlayState* play, EquipSlot button))
 
 bool mStartForceEnabled = false;
 
-RECOMP_DECLARE_EVENT(start_button_hook_init(PlayState* play))
+RECOMP_DECLARE_EVENT(start_button_event_init(PlayState* play))
 bool mStartButtonEnabled = true;
 TexturePtr mStartButtonTexture = gButtonBackgroundTex;
 s16 mStartButtonTextureWidth = 32;
@@ -111,9 +111,9 @@ s16 mStartButtonRectSizeY = 22;
 u16 mStartButtonScaleX = (s32)(1.4277344f * (1 << 10));
 u16 mStartButtonScaleY = (s32)(1.4277344f * (1 << 10));
 s16 mStartButtonColour[3] = {255, 130, 60};
-RECOMP_DECLARE_EVENT(start_button_hook_return(PlayState* play))
+RECOMP_DECLARE_EVENT(start_button_event_return(PlayState* play))
 
-RECOMP_DECLARE_EVENT(start_label_hook_init(PlayState* play))
+RECOMP_DECLARE_EVENT(start_label_event_init(PlayState* play))
 bool mStartLabelEnabled = true;
 int mStartLabelPrimColour[3] = {255, 255, 255};
 int mStartLabelEnvColour[4] = {0, 0, 0, 0};
@@ -126,9 +126,9 @@ int mStartLabelRectSizeX = 55 << 2;
 int mStartLabelRectSizeY = 18 << 2;
 int mStartLabelScaleX = (s32)(1.16211f * (1 << 10));
 int mStartLabelScaleY = (s32)(1.16211f * (1 << 10));
-RECOMP_DECLARE_EVENT(start_label_hook_return(PlayState* play))
+RECOMP_DECLARE_EVENT(start_label_event_return(PlayState* play))
 
-RECOMP_DECLARE_EVENT(c_up_button_hook_init(PlayState* play, s16* alpha))
+RECOMP_DECLARE_EVENT(c_up_button_event_init(PlayState* play, s16* alpha))
 bool mCUpButtonForceEnabled = false;
 bool mCUpButtonEnabled = true;
 TexturePtr mCUpButtonTexture = gButtonBackgroundTex;
@@ -141,9 +141,9 @@ s16 mCUpButtonRectSizeY = 16;
 u16 mCUpButtonScaleX = 2 << 10;
 u16 mCUpButtonScaleY = 2 << 10;
 s16 mCUpButtonColours[3] = {255, 240, 0};
-RECOMP_DECLARE_EVENT(c_up_button_hook_return(PlayState* play, s16* alpha))
+RECOMP_DECLARE_EVENT(c_up_button_event_return(PlayState* play, s16* alpha))
 
-RECOMP_DECLARE_EVENT(c_up_label_hook_init(PlayState* play, s16* alpha))
+RECOMP_DECLARE_EVENT(c_up_label_event_init(PlayState* play, s16* alpha))
 bool mCUpLabelEnabled = true;
 int mCUpLabelPrimColour[3] = {255, 255, 255};
 int mCUpLabelEnvColour[4] = {0, 0, 0, 0};
@@ -174,9 +174,9 @@ int mCUpLabelRectSizeX = 32 << 2;
 int mCUpLabelRectSizeY = 12 << 2;
 int mCUpLabelScaleX = 1 << 10;
 int mCUpLabelScaleY = 1 << 10;
-RECOMP_DECLARE_EVENT(c_up_label_hook_return(PlayState* play, s16* alpha))
+RECOMP_DECLARE_EVENT(c_up_label_event_return(PlayState* play, s16* alpha))
 
-RECOMP_DECLARE_EVENT(c_glyph_hook_init(PlayState* play))
+RECOMP_DECLARE_EVENT(c_glyph_event_init(PlayState* play))
 bool mCGlyphsEnabled[3] = {
     true,                               // EQUIP_SLOT_C_LEFT
     true,                               // EQUIP_SLOT_C_DOWN
@@ -232,7 +232,7 @@ s16 mCGlyphColours[3][3] = {
     {255, 240, 0},                      // EQUIP_SLOT_C_DOWN
     {255, 240, 0}                       // EQUIP_SLOT_C_RIGHT
 };
-RECOMP_DECLARE_EVENT(c_glyph_hook_return(PlayState* play))
+RECOMP_DECLARE_EVENT(c_glyph_event_return(PlayState* play))
 
 extern bool mBButtonDrawn;
 
@@ -262,7 +262,7 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
     // B, C-Left, C-Down, C-Right
     for (temp = EQUIP_SLOT_B; temp <= EQUIP_SLOT_C_RIGHT; temp++) {
         if (mButtonsEnabled[temp]) {
-            button_hook_init(play, temp);
+            button_event_init(play, temp);
             
             OVERLAY_DISP = Gfx_DrawTexRectIA8_DropShadow(
                 OVERLAY_DISP, mButtonTextures[temp], mButtonTexturesWidth[temp], mButtonTexturesHeight[temp],
@@ -272,16 +272,16 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
                 mButtonColours[temp][0], mButtonColours[temp][1], mButtonColours[temp][2],
                 mButtonAlphas[temp]);
             
-            button_hook_return(play, temp);
+            button_event_return(play, temp);
         }
     }
 
     if (mStartForceEnabled || (!IS_PAUSE_STATE_GAMEOVER(pauseCtx) && (IS_PAUSED(pauseCtx)))) {
         // Start Button
         
-        start_button_hook_init(play);
-        
         if (mStartButtonEnabled) {
+            start_button_event_init(play);
+
             OVERLAY_DISP =
                 Gfx_DrawTexRectIA8_DropShadow(
                     OVERLAY_DISP, mStartButtonTexture, mStartButtonTextureWidth, mStartButtonTextureHeight,
@@ -290,15 +290,15 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
                     mStartButtonScaleX, mStartButtonScaleY,
                     mStartButtonColour[0], mStartButtonColour[1], mStartButtonColour[2],
                     interfaceCtx->startAlpha);
+        
+            start_button_event_return(play);
         }
-
-        start_button_hook_return(play);
         
         // Start Label
-
-        start_label_hook_init(play);
         
         if (mStartLabelEnabled) {
+            start_label_event_init(play);
+        
             gDPPipeSync(OVERLAY_DISP++);
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0,
                 mStartLabelPrimColour[0], mStartLabelPrimColour[1], mStartLabelPrimColour[2], interfaceCtx->startAlpha);
@@ -318,9 +318,9 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
                 mStartLabelPositionX + mStartLabelRectSizeX, mStartLabelPositionY + mStartLabelRectSizeY,
                 G_TX_RENDERTILE, 0, 0,
                 mStartLabelScaleX, mStartLabelScaleY);
+        
+            start_label_event_return(play);
         }
-
-        start_label_hook_return(play);
     }
 
     if (mCUpButtonForceEnabled || (interfaceCtx->tatlCalling && !IS_PAUSED(pauseCtx) && (play->csCtx.state == CS_STATE_IDLE) &&
@@ -339,20 +339,24 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
             } else {
                 temp = interfaceCtx->aAlpha;
             }
-
-            c_up_button_hook_init(play, &temp);
             
             if (mCUpButtonEnabled) {
+                c_up_button_event_init(play, &temp);
+
                 OVERLAY_DISP = Gfx_DrawTexRectIA8_DropShadow(
                     OVERLAY_DISP, mCUpButtonTexture, mCUpButtonTextureWidth, mCUpButtonTextureHeight,
                     mCUpButtonPositionX, mCUpButtonPositionY,
                     mCUpButtonRectSizeX, mCUpButtonRectSizeY,
                     mCUpButtonScaleX, mCUpButtonScaleY,
                     mCUpButtonColours[0], mCUpButtonColours[1], mCUpButtonColours[2], temp);
+            
+                c_up_button_event_return(play, &temp);
             }
 
             // C-Up Label (Tatl Text)
             if (mCUpLabelEnabled) {
+                c_up_label_event_init(play, &temp);
+                
                 gDPPipeSync(OVERLAY_DISP++);
                 gDPSetPrimColor(OVERLAY_DISP++, 0, 0, mCUpLabelPrimColour[0], mCUpLabelPrimColour[1], mCUpLabelPrimColour[2], temp);
                 gDPSetEnvColor(OVERLAY_DISP++, mCUpLabelEnvColour[0], mCUpLabelEnvColour[1], mCUpLabelEnvColour[2], mCUpLabelEnvColour[3]);
@@ -365,9 +369,9 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
                 gSPTextureRectangle(OVERLAY_DISP++, mCUpLabelPositionX, mCUpLabelPositionY,
                     mCUpLabelPositionX + mCUpLabelRectSizeX, mCUpLabelPositionY  + mCUpLabelRectSizeY, G_TX_RENDERTILE,
                     0, 0, mCUpLabelScaleX, mCUpLabelScaleY);
+
+                c_up_label_event_return(play, &temp);
             }
-            
-            c_up_button_hook_return(play, &temp);
         }
 
         sCUpTimer--;
@@ -383,7 +387,7 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
     for (temp = EQUIP_SLOT_C_LEFT; temp <= EQUIP_SLOT_C_RIGHT; temp++) {
         int glyphTemp = temp - 1;
         if (mCGlyphsEnabled[glyphTemp] && GET_CUR_FORM_BTN_ITEM(temp) > 0xF0) {
-            c_glyph_hook_init(play);
+            c_glyph_event_init(play);
             
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0,
                 mCGlyphColours[glyphTemp][0], mCGlyphColours[glyphTemp][1], mCGlyphColours[glyphTemp][2],
@@ -395,7 +399,7 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
                         mCGlyphRectSizesX[glyphTemp], mCGlyphRectSizesY[glyphTemp],
                         mCGlyphScalesX[glyphTemp], mCGlyphScalesY[glyphTemp]);
             
-            c_glyph_hook_return(play);
+            c_glyph_event_return(play);
         }
     }
     
