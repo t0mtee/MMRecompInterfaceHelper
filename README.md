@@ -19,3 +19,9 @@ The library contains some improved optional bug fixes and inconsistency correcti
 - There is an option for the Attack button to no longer be disabled when empty, matching the other buttons.
 - Deku Link's empty C-buttons being disabled while other forms aren't can been fixed.
 - The green ammo bug before obtaining the magic meter can been fixed.
+
+## Dev Recommendations
+
+- The library contains some "extra variables" that are unneeded for vanilla functionality but should be updated if your mod changes something they relate to. These variables are all stored in `extra_vars.c`.
+    - As an example, if you move the A or B button positions, you should also change the m(A/B)ItemEquipPosition(X/Y) variables.
+- If your mod completely disables a specific UI element, you shouldn't just rely on its alpha being set to 0 or its position being moved off screen. You should use the available `...Enabled` variable to completely disable the code (and any callbacks) being run.
