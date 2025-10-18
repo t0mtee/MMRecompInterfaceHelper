@@ -1,7 +1,7 @@
 #ifndef __INTERFACE_HELPER__
 #define __INTERFACE_HELPER__
 
-// Interface Helper header v1.0.0-dev
+// Interface Helper header v1.1.0
 
 #include "modding.h"
 #include "global.h"
